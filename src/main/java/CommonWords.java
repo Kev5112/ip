@@ -5,5 +5,5 @@ public class CommonWords {
             + " What can I do for you?\n"
             + LINE;
     public static final String FAREWELL = " Bye. Hope to see you again soon!\n"
-            + LINE;
+            + "____________________________________________________________";
 }

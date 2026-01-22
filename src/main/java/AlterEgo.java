@@ -51,6 +51,6 @@ public class AlterEgo {
             }
         }
 
-        System.out.println(CommonWords.FAREWELL);
+        System.out.print(CommonWords.FAREWELL);
     }
 }
