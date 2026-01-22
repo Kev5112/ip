@@ -29,8 +29,26 @@ public class AlterEgo {
                 taskList.unmark(taskNumber);
                 continue;
             }
-
-            taskList.addTask(input);
+            if (input.startsWith("todo ")) {
+                String taskName = input.substring(5);
+                taskList.addToDo(taskName);
+                continue;
+            }
+            if (input.startsWith("deadline ")) {
+                int index = input.indexOf("/by");
+                String taskName = input.substring(9, index).trim();
+                String date = input.substring(index + 4);
+                taskList.addDeadline(taskName, date);
+                continue;
+            }
+            if (input.startsWith("event ")) {
+                int fromIndex = input.indexOf("/from");
+                int toIndex = input.indexOf("/to");
+                String taskName = input.substring(6, fromIndex).trim();
+                String fromDate = input.substring(fromIndex + 6, toIndex).trim();
+                String toDate = input.substring(toIndex + 4);
+                taskList.addEvent(taskName, fromDate, toDate);
+            }
         }
 
         System.out.println(CommonWords.FAREWELL);

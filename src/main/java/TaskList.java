@@ -7,9 +7,28 @@ public class TaskList {
         this.tasks = new ArrayList<>();
     }
 
-    public void addTask(String task) {
-        tasks.add(new Task(task));
-        System.out.println(CommonWords.LINE + "added: " + task + "\n" + CommonWords.LINE);
+    public void addToDo(String taskName) {
+        Task newTask = new ToDo(taskName);
+        tasks.add(newTask);
+        System.out.println(CommonWords.LINE + "Got it. I've added this task: \n "
+                + newTask + "\n" + "now you have " + tasks.size()
+                + " tasks in the list.\n" + CommonWords.LINE);
+    }
+
+    public void addDeadline(String taskName, String date) {
+        Task newTask = new Deadline(taskName, date);
+        tasks.add(newTask);
+        System.out.println(CommonWords.LINE + "Got it. I've added this task: \n "
+                + newTask + "\n" + "now you have " + tasks.size()
+                + " tasks in the list.\n" + CommonWords.LINE);
+    }
+
+    public void addEvent(String taskName, String fromDate, String toDate) {
+        Task newTask = new Event(taskName, fromDate, toDate);
+        tasks.add(newTask);
+        System.out.println(CommonWords.LINE + "Got it. I've added this task: \n "
+                + newTask + "\n" + "now you have " + tasks.size()
+                + " tasks in the list.\n" + CommonWords.LINE);
     }
 
     public void enumList() {
@@ -19,7 +38,7 @@ public class TaskList {
         } else {
             for (int i = 0; i < tasks.size(); i++) {
                 Task currTask = tasks.get(i);
-                System.out.print((i + 1) + "." + currTask.getCheckbox() + " " + currTask + "\n");
+                System.out.print((i + 1) + "." + currTask + "\n");
             }
         }
         System.out.println(CommonWords.LINE);
@@ -29,7 +48,7 @@ public class TaskList {
         System.out.println(CommonWords.LINE + "Nice! I've marked this task as done:");
         Task currTask = tasks.get(taskNumber - 1);
         currTask.setDone();
-        System.out.println(currTask.getCheckbox() + " " + currTask);
+        System.out.println(currTask);
         System.out.println(CommonWords.LINE);
     }
 
@@ -37,7 +56,7 @@ public class TaskList {
         System.out.println(CommonWords.LINE + "OK, I've marked this task as not done yet:");
         Task currTask = tasks.get(taskNumber - 1);
         currTask.setUndone();
-        System.out.println(currTask.getCheckbox() + " " + currTask);
+        System.out.println(currTask);
         System.out.println(CommonWords.LINE);
     }
 

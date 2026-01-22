@@ -1,6 +1,6 @@
-public class Task {
-    private String taskName;
-    private boolean isDone;
+public abstract class Task {
+    protected String taskName;
+    protected boolean isDone;
 
     public Task(String taskName) {
         this.taskName = taskName;
@@ -23,7 +23,9 @@ public class Task {
         return isDone ? "[X]" : "[ ]";
     }
 
+    public abstract String getType();
+
     public String toString() {
-        return taskName;
+        return getCheckbox() + " " + taskName;
     }
 }
