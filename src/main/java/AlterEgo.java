@@ -3,20 +3,23 @@ import java.util.Scanner;
 public class AlterEgo {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String greeting = "____________________________________________________________\n"
-                + " Hello! I'm Alter Ego\n"
-                + " What can I do for you?\n"
-                + "____________________________________________________________\n";
-        String farewell = " Bye. Hope to see you again soon!\n"
-                + "____________________________________________________________";
-        String line = "____________________________________________________________";
-        System.out.println(greeting);
+        TaskList taskList = new TaskList();
+
+        System.out.println(CommonWords.GREETING);
 
         while(true) {
             String input = scanner.nextLine();
-            if(input.equals("bye")) break;
-            System.out.println(line + "\n " + input + "\n" + line + "\n");
+            if(input.equals("bye")) {
+                break;
+            }
+            if(input.equals("list")) {
+                taskList.enumList();
+                continue;
+            }
+
+            taskList.addTask(input);
         }
-        System.out.println(farewell);
+
+        System.out.println(CommonWords.FAREWELL);
     }
 }
