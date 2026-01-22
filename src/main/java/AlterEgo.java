@@ -9,11 +9,24 @@ public class AlterEgo {
 
         while(true) {
             String input = scanner.nextLine();
+
             if(input.equals("bye")) {
                 break;
             }
             if(input.equals("list")) {
                 taskList.enumList();
+                continue;
+            }
+            if(input.startsWith("mark ")) {
+                String num = input.substring(5);
+                int taskNumber = Integer.parseInt(num);
+                taskList.mark(taskNumber);
+                continue;
+            }
+            if(input.startsWith("unmark ")) {
+                String num = input.substring(7);
+                int taskNumber = Integer.parseInt(num);
+                taskList.unmark(taskNumber);
                 continue;
             }
 
