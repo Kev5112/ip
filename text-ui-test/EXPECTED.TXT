@@ -4,9 +4,36 @@ ____________________________________________________________
 ____________________________________________________________
 
 ____________________________________________________________
+I don't understand that. Use 'help' to get the list of commands.
+____________________________________________________________
+
+____________________________________________________________
+list
+help
+mark
+unmark
+todo
+deadline
+event
+bye
+____________________________________________________________
+
+____________________________________________________________
+Error: you didn't input the description??
+____________________________________________________________
+
+____________________________________________________________
  Got it. I've added this task:
   [T][ ] borrow book
  now you have 1 tasks in the list.
+____________________________________________________________
+
+____________________________________________________________
+Error: you didn't input the description??
+____________________________________________________________
+
+____________________________________________________________
+Error: you didn't input the deadline. Use '/by' to indicate the deadline
 ____________________________________________________________
 
 ____________________________________________________________
@@ -16,22 +43,31 @@ ____________________________________________________________
 ____________________________________________________________
 
 ____________________________________________________________
- Got it. I've added this task:
-  [D][ ] run from monster (by: the next hour)
- now you have 3 tasks in the list.
+Error: you didn't input the description??
+____________________________________________________________
+
+____________________________________________________________
+Error: you fail to input the timing. Use '/from' to indicate the start and '/to' to indicate the end
+____________________________________________________________
+
+____________________________________________________________
+Error: you fail to input the timing. Use '/from' to indicate the start and '/to' to indicate the end
 ____________________________________________________________
 
 ____________________________________________________________
  Got it. I've added this task:
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
- now you have 4 tasks in the list.
+ now you have 3 tasks in the list.
 ____________________________________________________________
 
 ____________________________________________________________
  1.[T][ ] borrow book
  2.[D][ ] return book (by: Sunday)
- 3.[D][ ] run from monster (by: the next hour)
- 4.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+ 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+____________________________________________________________
+
+____________________________________________________________
+Mark what?
 ____________________________________________________________
 
 ____________________________________________________________
@@ -41,26 +77,29 @@ ____________________________________________________________
 
 ____________________________________________________________
  Nice! I've marked this task as done:
-  [D][X] run from monster (by: the next hour)
+  [E][X] project meeting (from: Mon 2pm to: 4pm)
+____________________________________________________________
+
+____________________________________________________________
+ Nice! I've marked this task as done:
+  [D][X] return book (by: Sunday)
 ____________________________________________________________
 
 ____________________________________________________________
  1.[T][X] borrow book
- 2.[D][ ] return book (by: Sunday)
- 3.[D][X] run from monster (by: the next hour)
- 4.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+ 2.[D][X] return book (by: Sunday)
+ 3.[E][X] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 
 ____________________________________________________________
  OK, I've marked this task as not done yet:
-  [D][ ] run from monster (by: the next hour)
+  [E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 
 ____________________________________________________________
  1.[T][X] borrow book
- 2.[D][ ] return book (by: Sunday)
- 3.[D][ ] run from monster (by: the next hour)
- 4.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+ 2.[D][X] return book (by: Sunday)
+ 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 
  Bye. Hope to see you again soon!
