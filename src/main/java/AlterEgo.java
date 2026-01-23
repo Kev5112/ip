@@ -105,6 +105,10 @@ public class AlterEgo {
     }
 
     public static void help() {
-        System.out.println(CommonWords.LINE + " list\n help\n delete\n mark\n unmark\n todo\n deadline\n event\n bye\n" + CommonWords.LINE);
+        System.out.print(CommonWords.LINE);
+        for (Commands command : Commands.values()) {
+            System.out.println(" " + command.toString().toLowerCase());
+        }
+        System.out.println(CommonWords.LINE);
     }
 }
