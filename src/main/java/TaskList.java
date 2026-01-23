@@ -27,7 +27,7 @@ public class TaskList {
         Task newTask = new Event(taskName, fromDate, toDate);
         tasks.add(newTask);
         System.out.println(CommonWords.LINE + " Got it. I've added this task:\n  "
-                + newTask + "\n" + " now you have " + tasks.size()
+                + newTask + "\n" + " Now you have " + tasks.size()
                 + " tasks in the list.\n" + CommonWords.LINE);
     }
 
@@ -44,7 +44,10 @@ public class TaskList {
         System.out.println(CommonWords.LINE);
     }
 
-    public void mark(int taskNumber) {
+    public void mark(int taskNumber) throws InvalidInputException {
+        if (taskNumber > tasks.size()) {
+            throw new InvalidInputException(" There's only " + tasks.size() + " tasks here!");
+        }
         System.out.println(CommonWords.LINE + " Nice! I've marked this task as done:");
         Task currTask = tasks.get(taskNumber - 1);
         currTask.setDone();
@@ -52,12 +55,25 @@ public class TaskList {
         System.out.println(CommonWords.LINE);
     }
 
-    public void unmark(int taskNumber) {
+    public void unmark(int taskNumber) throws InvalidInputException {
+        if (taskNumber > tasks.size()) {
+            throw new InvalidInputException(" There's only " + tasks.size() + " tasks here!");
+        }
         System.out.println(CommonWords.LINE + " OK, I've marked this task as not done yet:");
         Task currTask = tasks.get(taskNumber - 1);
         currTask.setUndone();
         System.out.println("  " + currTask);
         System.out.println(CommonWords.LINE);
+    }
+
+    public void delete(int taskNumber) throws InvalidInputException {
+        if (taskNumber > tasks.size()) {
+            throw new InvalidInputException(" There's only " + tasks.size() + " tasks here!");
+        }
+        System.out.println(CommonWords.LINE + " Noted. I've removed this task:");
+        Task removedTask = tasks.remove(taskNumber - 1);
+        System.out.println("  " + removedTask + "\n" + " Now you have " + tasks.size()
+                + " tasks in the list.\n" + CommonWords.LINE);
     }
 
 }
