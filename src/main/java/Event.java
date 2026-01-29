@@ -13,7 +13,15 @@ public class Event extends Task {
     }
 
     @Override
+    public String toFileFormat() {
+        return "E | " + (super.isDone() ? "1" : "0") + " | " + super.toString()
+                + " | " + fromDate + " -> " + toDate;
+    }
+
+    @Override
     public String toString() {
-        return this.getType() + super.toString() + " (from: " + fromDate + " to: " + toDate + ")";
+        return this.getType() + super.getCheckbox() + " "
+                + super.toString()
+                + " (from: " + fromDate + " to: " + toDate + ")";
     }
 }

@@ -2,14 +2,17 @@ import java.util.ArrayList;
 
 public class TaskList {
     private ArrayList<Task> tasks;
+    private Storage storage;
 
-    public TaskList() {
-        this.tasks = new ArrayList<>();
+    public TaskList(Storage storage) {
+        this.tasks = storage.loadTasks();
+        this.storage = storage;
     }
 
     public void addToDo(String taskName) {
         Task newTask = new ToDo(taskName);
         tasks.add(newTask);
+        storage.addNewTask(newTask);
         System.out.println(CommonWords.LINE + " Got it. I've added this task:\n  "
                 + newTask + "\n" + " now you have " + tasks.size()
                 + " tasks in the list.\n" + CommonWords.LINE);
@@ -18,6 +21,7 @@ public class TaskList {
     public void addDeadline(String taskName, String date) {
         Task newTask = new Deadline(taskName, date);
         tasks.add(newTask);
+        storage.addNewTask(newTask);
         System.out.println(CommonWords.LINE + " Got it. I've added this task:\n  "
                 + newTask + "\n" + " now you have " + tasks.size()
                 + " tasks in the list.\n" + CommonWords.LINE);
@@ -26,6 +30,7 @@ public class TaskList {
     public void addEvent(String taskName, String fromDate, String toDate) {
         Task newTask = new Event(taskName, fromDate, toDate);
         tasks.add(newTask);
+        storage.addNewTask(newTask);
         System.out.println(CommonWords.LINE + " Got it. I've added this task:\n  "
                 + newTask + "\n" + " Now you have " + tasks.size()
                 + " tasks in the list.\n" + CommonWords.LINE);
@@ -51,6 +56,7 @@ public class TaskList {
         System.out.println(CommonWords.LINE + " Nice! I've marked this task as done:");
         Task currTask = tasks.get(taskNumber - 1);
         currTask.setDone();
+        storage.rewriteFile(tasks);
         System.out.println("  " + currTask);
         System.out.println(CommonWords.LINE);
     }
@@ -62,6 +68,7 @@ public class TaskList {
         System.out.println(CommonWords.LINE + " OK, I've marked this task as not done yet:");
         Task currTask = tasks.get(taskNumber - 1);
         currTask.setUndone();
+        storage.rewriteFile(tasks);
         System.out.println("  " + currTask);
         System.out.println(CommonWords.LINE);
     }
@@ -72,8 +79,14 @@ public class TaskList {
         }
         System.out.println(CommonWords.LINE + " Noted. I've removed this task:");
         Task removedTask = tasks.remove(taskNumber - 1);
+        storage.rewriteFile(tasks);
         System.out.println("  " + removedTask + "\n" + " Now you have " + tasks.size()
                 + " tasks in the list.\n" + CommonWords.LINE);
+    }
+
+    public void clear() {
+        tasks = new ArrayList<Task>();
+        storage.clear();
     }
 
 }

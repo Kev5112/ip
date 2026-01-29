@@ -9,7 +9,12 @@ public class ToDo extends Task {
     }
 
     @Override
+    public String toFileFormat() {
+        return "T | " + (super.isDone() ? "1" : "0") + " | " + super.toString();
+    }
+
+    @Override
     public String toString() {
-        return this.getType() + super.toString();
+        return this.getType() + super.getCheckbox() + " " + super.toString();
     }
 }
