@@ -12,7 +12,14 @@ public class Deadline extends Task {
     }
 
     @Override
+    public String toFileFormat() {
+        return "D | " + (super.isDone() ? "1" : "0") + " | " + super.toString()
+                + " | " + date;
+    }
+
+    @Override
     public String toString() {
-        return this.getType() + super.toString() + " (by: " + date + ")";
+        return this.getType() + super.getCheckbox() + " " +
+                super.toString() + " (by: " + date + ")";
     }
 }

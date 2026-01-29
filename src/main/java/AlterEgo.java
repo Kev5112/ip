@@ -1,7 +1,9 @@
 import java.util.Scanner;
 
 public class AlterEgo {
-    private static TaskList taskList = new TaskList();
+    private static String personalFile = "./data/duke.txt";
+    private static Storage storage = new Storage(personalFile);
+    private static TaskList taskList = new TaskList(storage);
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -28,6 +30,10 @@ public class AlterEgo {
 
     private static void processInput(String input) throws EmptyTaskException, InvalidInputException {
         if (input.isBlank()) {
+            return;
+        }
+        if (input.equals("clear")) {
+            taskList.clear();
             return;
         }
         if(input.equals("list")) {

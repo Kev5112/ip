@@ -1,5 +1,6 @@
 public enum Commands {
     LIST,
+    CLEAR,
     HELP,
     DELETE,
     MARK,

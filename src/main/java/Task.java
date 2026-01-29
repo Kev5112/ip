@@ -20,12 +20,14 @@ public abstract class Task {
     }
 
     public String getCheckbox() {
-        return isDone ? "[X]" : "[ ]";
+        return this.isDone() ? "[X]" : "[ ]";
     }
 
     public abstract String getType();
 
+    public abstract String toFileFormat();
+
     public String toString() {
-        return getCheckbox() + " " + taskName;
+        return taskName;
     }
 }
