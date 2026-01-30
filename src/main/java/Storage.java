@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Storage {
@@ -90,13 +92,16 @@ public class Storage {
                 task.setDone();
             }
         } else if (parts[0].equals("D")) {
-            task = new Deadline(parts[2], parts[3]);
+            task = new Deadline(parts[2],
+                    LocalDate.parse(parts[3], DateTimeFormatter.ofPattern("MMM d yyyy")));
             if (parts[1].equals("1")) {
                 task.setDone();
             }
         } else if (parts[0].equals("E")) {
             String[] dates = parts[3].split(" -> ");
-            task = new Event(parts[2], dates[0], dates[1]);
+            task = new Event(parts[2],
+                    LocalDate.parse(dates[0], DateTimeFormatter.ofPattern("MMM d yyyy")),
+                    LocalDate.parse(dates[1], DateTimeFormatter.ofPattern("MMM d yyyy")));
             if (parts[1].equals("1")) {
                 task.setDone();
             }

@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class TaskList {
@@ -18,28 +20,43 @@ public class TaskList {
                 + " tasks in the list.\n" + CommonWords.LINE);
     }
 
-    public void addDeadline(String taskName, String date) {
-        Task newTask = new Deadline(taskName, date);
-        tasks.add(newTask);
-        storage.addNewTask(newTask);
-        System.out.println(CommonWords.LINE + " Got it. I've added this task:\n  "
-                + newTask + "\n" + " now you have " + tasks.size()
-                + " tasks in the list.\n" + CommonWords.LINE);
+    public void addDeadline(String taskName, String dateString) {
+        try {
+            LocalDate date = LocalDate.parse(dateString);
+            Task newTask = new Deadline(taskName, date);
+            tasks.add(newTask);
+            storage.addNewTask(newTask);
+            System.out.println(CommonWords.LINE + " Got it. I've added this task:\n  "
+                    + newTask + "\n" + " now you have " + tasks.size()
+                    + " tasks in the list.\n" + CommonWords.LINE);
+        } catch (DateTimeParseException e) {
+            System.out.println(CommonWords.LINE
+                    + " Invalid date format. Proper format: yyyy-MM-dd"
+                    + "\n" + CommonWords.LINE);
+        }
     }
 
-    public void addEvent(String taskName, String fromDate, String toDate) {
-        Task newTask = new Event(taskName, fromDate, toDate);
-        tasks.add(newTask);
-        storage.addNewTask(newTask);
-        System.out.println(CommonWords.LINE + " Got it. I've added this task:\n  "
-                + newTask + "\n" + " Now you have " + tasks.size()
-                + " tasks in the list.\n" + CommonWords.LINE);
+    public void addEvent(String taskName, String fromDateString, String toDateString) {
+        try {
+            LocalDate fromDate = LocalDate.parse(fromDateString);
+            LocalDate toDate = LocalDate.parse(toDateString);
+            Task newTask = new Event(taskName, fromDate, toDate);
+            tasks.add(newTask);
+            storage.addNewTask(newTask);
+            System.out.println(CommonWords.LINE + " Got it. I've added this task:\n  "
+                    + newTask + "\n" + " Now you have " + tasks.size()
+                    + " tasks in the list.\n" + CommonWords.LINE);
+        } catch (DateTimeParseException e) {
+            System.out.println(CommonWords.LINE
+                    + " Invalid date format. Proper format: yyyy-MM-dd"
+                    + "\n" + CommonWords.LINE);
+        }
     }
 
     public void enumList() {
         System.out.print(CommonWords.LINE);
         if (tasks.isEmpty()) {
-            System.out.print("No task. You're free to play. Yippie!\n");
+            System.out.print(" No task. You're free to play. Yippie!\n");
         } else {
             for (int i = 0; i < tasks.size(); i++) {
                 Task currTask = tasks.get(i);
@@ -87,6 +104,9 @@ public class TaskList {
     public void clear() {
         tasks = new ArrayList<Task>();
         storage.clear();
+        System.out.println(CommonWords.LINE
+                + " Cleared data from storage. You have 0 task now."
+                + "\n" + CommonWords.LINE);
     }
 
 }

@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public abstract class Task {
     protected String taskName;
     protected boolean isDone;
@@ -29,5 +32,9 @@ public abstract class Task {
 
     public String toString() {
         return taskName;
+    }
+
+    public static String dateFormat(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
     }
 }

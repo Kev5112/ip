@@ -1,7 +1,9 @@
-public class Deadline extends Task {
-    private String date;
+import java.time.LocalDate;
 
-    public Deadline(String TaskName, String date) {
+public class Deadline extends Task {
+    private LocalDate date;
+
+    public Deadline(String TaskName, LocalDate date) {
         super(TaskName);
         this.date = date;
     }
@@ -14,12 +16,12 @@ public class Deadline extends Task {
     @Override
     public String toFileFormat() {
         return "D | " + (super.isDone() ? "1" : "0") + " | " + super.toString()
-                + " | " + date;
+                + " | " + dateFormat(date);
     }
 
     @Override
     public String toString() {
         return this.getType() + super.getCheckbox() + " " +
-                super.toString() + " (by: " + date + ")";
+                super.toString() + " (by: " + dateFormat(date) + ")";
     }
 }
