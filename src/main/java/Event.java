@@ -1,7 +1,9 @@
+import java.time.LocalDate;
+
 public class Event extends Task {
-    private String fromDate;
-    private String toDate;
-    public Event(String TaskName, String fromDate, String toDate) {
+    private LocalDate fromDate;
+    private LocalDate toDate;
+    public Event(String TaskName, LocalDate fromDate, LocalDate toDate) {
         super(TaskName);
         this.fromDate = fromDate;
         this.toDate = toDate;
@@ -15,13 +17,13 @@ public class Event extends Task {
     @Override
     public String toFileFormat() {
         return "E | " + (super.isDone() ? "1" : "0") + " | " + super.toString()
-                + " | " + fromDate + " -> " + toDate;
+                + " | " + dateFormat(fromDate) + " -> " + dateFormat(toDate);
     }
 
     @Override
     public String toString() {
         return this.getType() + super.getCheckbox() + " "
                 + super.toString()
-                + " (from: " + fromDate + " to: " + toDate + ")";
+                + " (from: " + dateFormat(fromDate) + " to: " + dateFormat(toDate) + ")";
     }
 }

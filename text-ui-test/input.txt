@@ -2,18 +2,21 @@ clear
 
 asdfghjkl
 help
+list
 
 todo
 todo borrow book
 
 deadline
 deadline return book
-deadline return book /by Sunday
+deadline return book /by someInvalidDate
+deadline return book /by 2026-04-20
 
 event
 event project meeting
-event project meeting /from Mon 2 pm
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from 2026-05-30
+event project meeting /from someInvalidDate /to someInvalidDate
+event project meeting /from 2026-05-30 /to 2026-06-01
 
 list
 
