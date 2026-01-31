@@ -35,7 +35,7 @@ public class Event extends Task {
         if (this == obj) {
             return true;
         }
-        if (obj == null || getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass()) {
             return false;
         }
         if (!super.equals(obj)) {
