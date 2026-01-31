@@ -1,3 +1,10 @@
+package alterego;
+
+import alterego.command.Parser;
+import alterego.storage.Storage;
+import alterego.task.TaskList;
+import alterego.ui.Ui;
+
 public class AlterEgo {
 
     private Storage storage;
@@ -27,7 +34,7 @@ public class AlterEgo {
     }
 
     public static void main(String[] args) {
-        AlterEgo chatbot = new AlterEgo("./data/AlterEgo.txt");
+        AlterEgo chatbot = new AlterEgo("./data/alterego.AlterEgo.txt");
 
         chatbot.run();
     }

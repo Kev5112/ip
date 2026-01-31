@@ -1,4 +1,4 @@
-# AlterEgo User Guide
+# alterego.AlterEgo User Guide
 
 // Update the title above to match the actual product name
 

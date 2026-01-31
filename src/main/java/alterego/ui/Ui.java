@@ -1,7 +1,12 @@
+package alterego.ui;
+
+import alterego.command.Command;
+
 import java.util.Scanner;
 
 public class Ui {
     Scanner scanner;
+    public static final String LINE = "____________________________________________________________\n";
 
     public Ui() {
         this.scanner = new Scanner(System.in);
@@ -20,11 +25,11 @@ public class Ui {
     }
 
     public static void help() {
-        System.out.print(Line.LINE);
+        System.out.print(Ui.LINE);
         for (Command command : Command.values()) {
             System.out.println(" " + command.toString().toLowerCase());
         }
-        System.out.println(Line.LINE);
+        System.out.println(Ui.LINE);
     }
 
     public static String decorate(String message) {
@@ -33,7 +38,7 @@ public class Ui {
         for (String line : lines) {
             accum = accum + " " + line + "\n";
         }
-        return Line.LINE + accum + Line.LINE;
+        return Ui.LINE + accum + Ui.LINE;
     }
 
     public static void show(String message) {

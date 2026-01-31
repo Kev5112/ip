@@ -1,3 +1,10 @@
+package alterego.storage;
+
+import alterego.task.Deadline;
+import alterego.task.Event;
+import alterego.task.Task;
+import alterego.task.ToDo;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;

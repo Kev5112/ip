@@ -1,3 +1,9 @@
+package alterego.command;
+
+import alterego.AlterEgoException;
+import alterego.task.TaskList;
+import alterego.ui.Ui;
+
 public class Parser {
     private boolean isExit;
 
@@ -92,11 +98,11 @@ public class Parser {
     }
 
     public static void help() {
-        System.out.print(Line.LINE);
+        String accum = "";
         for (Command command : Command.values()) {
-            System.out.println(" " + command.toString().toLowerCase());
+            accum = accum + command.toString().toLowerCase() + "\n";
         }
-        System.out.println(Line.LINE);
+        Ui.show(accum);
     }
 
     public boolean isExit() {

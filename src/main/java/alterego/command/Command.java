@@ -1,3 +1,5 @@
+package alterego.command;
+
 public enum Command {
     LIST,
     CLEAR,

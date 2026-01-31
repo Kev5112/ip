@@ -1,3 +1,9 @@
+package alterego.task;
+
+import alterego.*;
+import alterego.storage.Storage;
+import alterego.ui.Ui;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
