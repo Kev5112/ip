@@ -20,7 +20,7 @@ public class AlterEgo {
     public void run() {
         Ui.hello();
         boolean isExit = false;
-        while(!isExit) {
+        while (!isExit) {
             String input = ui.readCommand();
             try {
                 Parser parser = new Parser();

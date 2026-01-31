@@ -103,5 +103,4 @@ public class TaskList {
         storage.clear();
         Ui.show("Cleared data from storage. You have 0 task now.");
     }
-
 }

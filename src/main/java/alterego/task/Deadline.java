@@ -1,6 +1,7 @@
 package alterego.task;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Deadline extends Task {
     private LocalDate date;
@@ -25,5 +26,26 @@ public class Deadline extends Task {
     public String toString() {
         return this.getType() + super.getCheckbox() + " " +
                 super.toString() + " (by: " + dateFormat(date) + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        Deadline other = (Deadline) obj;
+        return Objects.equals(date, other.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), date);
     }
 }
