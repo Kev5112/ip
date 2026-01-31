@@ -6,8 +6,8 @@ public class TaskList {
     private ArrayList<Task> tasks;
     private Storage storage;
 
-    public TaskList(Storage storage) {
-        this.tasks = storage.loadTasks();
+    public TaskList(ArrayList<Task> tasks, Storage storage) {
+        this.tasks = tasks;
         this.storage = storage;
     }
 
@@ -15,9 +15,9 @@ public class TaskList {
         Task newTask = new ToDo(taskName);
         tasks.add(newTask);
         storage.addNewTask(newTask);
-        System.out.println(CommonWords.LINE + " Got it. I've added this task:\n  "
-                + newTask + "\n" + " now you have " + tasks.size()
-                + " tasks in the list.\n" + CommonWords.LINE);
+        Ui.show("Got it. I've added this task:\n "
+                + newTask + "\n" + "Now you have " + tasks.size()
+                + " tasks in the list.\n");
     }
 
     public void addDeadline(String taskName, String dateString) {
@@ -26,13 +26,11 @@ public class TaskList {
             Task newTask = new Deadline(taskName, date);
             tasks.add(newTask);
             storage.addNewTask(newTask);
-            System.out.println(CommonWords.LINE + " Got it. I've added this task:\n  "
-                    + newTask + "\n" + " now you have " + tasks.size()
-                    + " tasks in the list.\n" + CommonWords.LINE);
+            Ui.show("Got it. I've added this task:\n "
+                    + newTask + "\n" + "Now you have " + tasks.size()
+                    + " tasks in the list.\n");
         } catch (DateTimeParseException e) {
-            System.out.println(CommonWords.LINE
-                    + " Invalid date format. Proper format: yyyy-MM-dd"
-                    + "\n" + CommonWords.LINE);
+            Ui.show("Invalid date format. Proper format: yyyy-MM-dd");
         }
     }
 
@@ -43,70 +41,61 @@ public class TaskList {
             Task newTask = new Event(taskName, fromDate, toDate);
             tasks.add(newTask);
             storage.addNewTask(newTask);
-            System.out.println(CommonWords.LINE + " Got it. I've added this task:\n  "
-                    + newTask + "\n" + " Now you have " + tasks.size()
-                    + " tasks in the list.\n" + CommonWords.LINE);
+            Ui.show("Got it. I've added this task:\n "
+                    + newTask + "\n" + "Now you have " + tasks.size()
+                    + " tasks in the list.\n");
         } catch (DateTimeParseException e) {
-            System.out.println(CommonWords.LINE
-                    + " Invalid date format. Proper format: yyyy-MM-dd"
-                    + "\n" + CommonWords.LINE);
+            Ui.show("Invalid date format. Proper format: yyyy-MM-dd");
         }
     }
 
     public void enumList() {
-        System.out.print(CommonWords.LINE);
         if (tasks.isEmpty()) {
-            System.out.print(" No task. You're free to play. Yippie!\n");
+            Ui.show("No task. You're free to play. Yippie!");
         } else {
+            String accum = "";
             for (int i = 0; i < tasks.size(); i++) {
                 Task currTask = tasks.get(i);
-                System.out.print(" " + (i + 1) + "." + currTask + "\n");
+                accum += (i + 1) + "." + currTask + "\n";
             }
+            Ui.show(accum);
         }
-        System.out.println(CommonWords.LINE);
     }
 
-    public void mark(int taskNumber) throws InvalidInputException {
+    public void mark(int taskNumber) throws AlterEgoException {
         if (taskNumber > tasks.size()) {
-            throw new InvalidInputException(" There's only " + tasks.size() + " tasks here!");
+            throw new AlterEgoException("There's only " + tasks.size() + " tasks here!");
         }
-        System.out.println(CommonWords.LINE + " Nice! I've marked this task as done:");
         Task currTask = tasks.get(taskNumber - 1);
         currTask.setDone();
         storage.rewriteFile(tasks);
-        System.out.println("  " + currTask);
-        System.out.println(CommonWords.LINE);
+        Ui.show("Nice! I've marked this task as done:\n " + currTask);
     }
 
-    public void unmark(int taskNumber) throws InvalidInputException {
+    public void unmark(int taskNumber) throws AlterEgoException {
         if (taskNumber > tasks.size()) {
-            throw new InvalidInputException(" There's only " + tasks.size() + " tasks here!");
+            throw new AlterEgoException("There's only " + tasks.size() + " tasks here!");
         }
-        System.out.println(CommonWords.LINE + " OK, I've marked this task as not done yet:");
         Task currTask = tasks.get(taskNumber - 1);
         currTask.setUndone();
         storage.rewriteFile(tasks);
-        System.out.println("  " + currTask);
-        System.out.println(CommonWords.LINE);
+        Ui.show("OK, I've marked this task as not done yet:\n " + currTask);
     }
 
-    public void delete(int taskNumber) throws InvalidInputException {
+    public void delete(int taskNumber) throws AlterEgoException {
         if (taskNumber > tasks.size()) {
-            throw new InvalidInputException(" There's only " + tasks.size() + " tasks here!");
+            throw new AlterEgoException("There's only " + tasks.size() + " tasks here!");
         }
-        System.out.println(CommonWords.LINE + " Noted. I've removed this task:");
         Task removedTask = tasks.remove(taskNumber - 1);
         storage.rewriteFile(tasks);
-        System.out.println("  " + removedTask + "\n" + " Now you have " + tasks.size()
-                + " tasks in the list.\n" + CommonWords.LINE);
+        Ui.show("Noted. I've removed this task:\n " + removedTask + "\n"
+                + "Now you have " + tasks.size() + " tasks in the list.");
     }
 
     public void clear() {
         tasks = new ArrayList<Task>();
         storage.clear();
-        System.out.println(CommonWords.LINE
-                + " Cleared data from storage. You have 0 task now."
-                + "\n" + CommonWords.LINE);
+        Ui.show("Cleared data from storage. You have 0 task now.");
     }
 
 }

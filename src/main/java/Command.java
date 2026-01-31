@@ -1,4 +1,4 @@
-public enum Commands {
+public enum Command {
     LIST,
     CLEAR,
     HELP,
@@ -8,5 +8,5 @@ public enum Commands {
     TODO,
     DEADLINE,
     EVENT,
-    BYE
+    BYE;
 }
