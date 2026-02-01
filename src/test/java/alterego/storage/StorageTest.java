@@ -7,7 +7,13 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
-import alterego.task.*;
+import alterego.task.Deadline;
+import alterego.task.Event;
+import alterego.task.Task;
+import alterego.task.TaskList;
+import alterego.task.ToDo;
+
+
 
 
 public class StorageTest {
