@@ -4,81 +4,74 @@ import alterego.task.Deadline;
 import alterego.task.Event;
 import alterego.task.Task;
 import alterego.task.ToDo;
+import alterego.ui.Ui;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Storage {
-    private final Path filePath;
+    private final String filePath;
 
     public Storage(String path) {
-        this.filePath = Path.of(path);
+        this.filePath = path;
     }
 
     public void clear() {
         try {
-            Files.writeString(filePath, "",
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.TRUNCATE_EXISTING);
+            FileWriter fw = new FileWriter(filePath);
+            fw.write("");
+            fw.close();
         } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+            Ui.show("Error");
         }
     }
 
-    public void rewriteFile(ArrayList<Task> Tasks) {
+    public void rewriteFile(ArrayList<Task> tasks) {
         try {
-            Files.createDirectories(filePath.getParent());
-        } catch (IOException e) {
-            System.out.println("Error");
-        }
-        try (BufferedWriter writer = Files.newBufferedWriter(filePath)){
-            for (Task task : Tasks) {
-                writer.write(task.toFileFormat());
-                writer.newLine();
+            FileWriter fw = new FileWriter(filePath);
+            for (Task task : tasks) {
+                fw.write(task.toFileFormat() + System.lineSeparator());
             }
+            fw.close();
         } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+            Ui.show("Error");
         }
     }
 
     public void addNewTask(Task task) {
         try {
-            Files.createDirectories(filePath.getParent());
-            Files.writeString(filePath, task.toFileFormat() + "\n",
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.APPEND);
+            FileWriter fw = new FileWriter(filePath, true);
+            fw.write(task.toFileFormat() + System.lineSeparator());
+            fw.close();
         } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+            Ui.show("Error");
         }
     }
 
     public ArrayList<Task> loadTasks() {
         ArrayList<Task> tasks = new ArrayList<>();
 
-        if (!Files.exists(filePath)) {
-            return tasks;
-        }
-
-        try (BufferedReader reader = Files.newBufferedReader(filePath)) {
-            while (true) {
-                String line = reader.readLine();
-                if (line == null) {
-                    break;
+        try {
+            File f = new File(filePath);
+            Scanner s = new Scanner(f);
+            while (s.hasNextLine()) {
+                String nextString = s.nextLine().trim();
+                if (nextString.isEmpty()) {
+                    continue;
                 }
-                Task task = parseTask(line);
-                if (task != null) {
-                    tasks.add(task);
+                Task nextTask = parseTask(nextString);
+                if (nextTask != null) {
+                    tasks.add(nextTask);
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            Ui.show("Error");
         }
 
         return tasks;
