@@ -1,5 +1,8 @@
 package alterego.command;
 
+/**
+ * Enumeration of all available commands in AlterEgo.
+ */
 public enum Command {
     LIST,
     CLEAR,
