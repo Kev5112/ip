@@ -4,13 +4,26 @@ import alterego.AlterEgoException;
 import alterego.task.TaskList;
 import alterego.ui.Ui;
 
+/**
+ * Parses and executes user commands.
+ */
 public class Parser {
     private boolean isExit;
 
+    /**
+     * Creates a new Parser, initializing exit loop as false.
+     */
     public Parser() {
         this.isExit = false;
     }
 
+    /**
+     * Parses and executes a user command. Calls methods in taskList.
+     * Skips a blank command.
+     * @param input user command string
+     * @param taskList task list to operate on
+     * @throws AlterEgoException if command is invalid
+     */
     public void execute(String input, TaskList taskList) throws AlterEgoException {
         if (input.isBlank()) {
             return;
@@ -23,15 +36,15 @@ public class Parser {
             taskList.clear();
             return;
         }
-        if(input.equals("list")) {
+        if (input.equals("list")) {
             taskList.enumList();
             return;
         }
         if (input.equals("help")) {
-            help();
+            Ui.help();
             return;
         }
-        if(input.startsWith("delete")) {
+        if (input.startsWith("delete")) {
             if (input.length() < 8) {
                 throw new AlterEgoException("Delete what?");
             }
@@ -40,7 +53,7 @@ public class Parser {
             taskList.delete(taskNumber);
             return;
         }
-        if(input.startsWith("mark")) {
+        if (input.startsWith("mark")) {
             if (input.length() < 6) {
                 throw new AlterEgoException("Mark what?");
             }
@@ -49,7 +62,7 @@ public class Parser {
             taskList.mark(taskNumber);
             return;
         }
-        if(input.startsWith("unmark")) {
+        if (input.startsWith("unmark")) {
             if (input.length() < 8) {
                 throw new AlterEgoException("Unmark what?");
             }
@@ -71,8 +84,8 @@ public class Parser {
             if (input.length() < 10) {
                 throw new AlterEgoException("Error: you didn't input the description??");
             } else if (index == -1) {
-                throw new AlterEgoException("Error: you didn't input the deadline. " +
-                        "Use '/by' to indicate the deadline");
+                throw new AlterEgoException("Error: you didn't input the deadline. "
+                        + "Use '/by' to indicate the deadline");
             }
             String taskName = input.substring(9, index).trim();
             String date = input.substring(index + 4);
@@ -85,8 +98,8 @@ public class Parser {
             if (input.length() < 7) {
                 throw new AlterEgoException("Error: you didn't input the description??");
             } else if (fromIndex == -1 || toIndex == -1) {
-                throw new AlterEgoException("Error: you fail to input the timing. " +
-                        "Use '/from' to indicate the start and '/to' to indicate the end");
+                throw new AlterEgoException("Error: you fail to input the timing. "
+                        + "Use '/from' to indicate the start and '/to' to indicate the end");
             }
             String taskName = input.substring(6, fromIndex).trim();
             String fromDate = input.substring(fromIndex + 6, toIndex).trim();
@@ -97,14 +110,10 @@ public class Parser {
         throw new AlterEgoException("I don't understand that. Use 'help' to get the list of commands.");
     }
 
-    public static void help() {
-        String accum = "";
-        for (Command command : Command.values()) {
-            accum = accum + command.toString().toLowerCase() + "\n";
-        }
-        Ui.show(accum);
-    }
-
+    /**
+     * Checks if exit command has been received.
+     * @return true if user entered "bye", false otherwise
+     */
     public boolean isExit() {
         return isExit;
     }

@@ -1,11 +1,5 @@
 package alterego.storage;
 
-import alterego.task.Deadline;
-import alterego.task.Event;
-import alterego.task.Task;
-import alterego.task.ToDo;
-import alterego.ui.Ui;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -15,13 +9,29 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import alterego.task.Deadline;
+import alterego.task.Event;
+import alterego.task.Task;
+import alterego.task.ToDo;
+import alterego.ui.Ui;
+
+/**
+ * Handles file storage operations for tasks.
+ */
 public class Storage {
     private final String filePath;
 
+    /**
+     * Set a file corresponding to the path as the storage.
+     * @param path file path for storing tasks
+     */
     public Storage(String path) {
         this.filePath = path;
     }
 
+    /**
+     * Clears all tasks from storage file.
+     */
     public void clear() {
         try {
             FileWriter fw = new FileWriter(filePath);
@@ -32,6 +42,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Overwrites storage file with current task list/state.
+     * @param tasks list of tasks to save
+     */
     public void rewriteFile(ArrayList<Task> tasks) {
         try {
             FileWriter fw = new FileWriter(filePath);
@@ -44,6 +58,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Appends a single task to storage file.
+     * @param task task to append to file
+     */
     public void addNewTask(Task task) {
         try {
             FileWriter fw = new FileWriter(filePath, true);
@@ -54,6 +72,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads tasks from storage file.
+     * @return list of loaded tasks, empty if file doesn't exist
+     */
     public ArrayList<Task> loadTasks() {
         ArrayList<Task> tasks = new ArrayList<>();
 
