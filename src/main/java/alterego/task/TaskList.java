@@ -99,6 +99,27 @@ public class TaskList {
         }
     }
 
+    public void find(String keyword) {
+        if (tasks.isEmpty()) {
+            Ui.show("No task. You're free to play. Yippie!");
+        } else {
+            String accum = "";
+            int j = 0;
+            for (int i = 0; i < tasks.size(); i++) {
+                Task currTask = tasks.get(i);
+                if (currTask.toString().contains(keyword)) {
+                    accum += (j + 1) + "." + currTask + "\n";
+                    j++;
+                }
+            }
+            if (j == 0) {
+                Ui.show("No search result found.");
+                return;
+            }
+            Ui.show(accum);
+        }
+    }
+
     /**
      * Marks a task as done, update changes in storage, then prints confirmation.
      * @param taskNumber task number (1-based index)
