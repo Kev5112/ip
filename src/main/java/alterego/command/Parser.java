@@ -44,6 +44,13 @@ public class Parser {
             Ui.help();
             return;
         }
+        if (input.startsWith("find")) {
+            if (input.length() < 6) {
+                throw new AlterEgoException("Delete what?");
+            }
+            taskList.find(input.substring(5));
+            return;
+        }
         if (input.startsWith("delete")) {
             if (input.length() < 8) {
                 throw new AlterEgoException("Delete what?");
