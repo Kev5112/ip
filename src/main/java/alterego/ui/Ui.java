@@ -28,9 +28,11 @@ public class Ui {
 
     /**
      * Shows welcome message.
+     *
+     * @return
      */
-    public static void hello() {
-        show("Hello! I'm Alter Ego\nWhat can I do for you?\n");
+    public static String hello() {
+        return decorate("Hello! I'm Alter Ego\nWhat can I do for you?\n");
     }
 
     /**
@@ -43,12 +45,12 @@ public class Ui {
     /**
      * Shows all available commands.
      */
-    public static void help() {
+    public static String help() {
         String accum = "";
         for (Command command : Command.values()) {
             accum = accum + command.toString().toLowerCase() + "\n";
         }
-        Ui.show(accum);
+        return Ui.decorate(accum);
     }
 
     /**
