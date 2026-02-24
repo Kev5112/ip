@@ -14,6 +14,7 @@ public class AlterEgo {
     private Storage storage;
     private TaskList taskList;
     private Ui ui;
+    private Parser parser = new Parser();
 
     /**
      * Constructs an AlterEgo chatbot instance with the specified file path for data storage.
@@ -53,5 +54,14 @@ public class AlterEgo {
     public static void main(String[] args) {
         AlterEgo chatbot = new AlterEgo("./data/alterego.AlterEgo.txt");
         chatbot.run();
+    }
+
+    public String getResponse(String input) {
+        try {
+            String output = parser.execute(input, taskList);
+            return output;
+        } catch (AlterEgoException e) {
+            return Ui.decorate(e.getMessage());
+        }
     }
 }

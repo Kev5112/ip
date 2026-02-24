@@ -30,11 +30,11 @@ public class TaskList {
      * Prints out the confirmation
      * @param taskName description of the todo task
      */
-    public void addToDo(String taskName) {
+    public String addToDo(String taskName) {
         Task newTask = new ToDo(taskName);
         tasks.add(newTask);
         storage.addNewTask(newTask);
-        Ui.show("Got it. I've added this task:\n "
+        return Ui.decorate("Got it. I've added this task:\n "
                 + newTask + "\n" + "Now you have " + tasks.size()
                 + " tasks in the list.\n");
     }
@@ -46,17 +46,17 @@ public class TaskList {
      * @param taskName description of the deadline task
      * @param dateString deadline date in yyyy-MM-dd format
      */
-    public void addDeadline(String taskName, String dateString) {
+    public String addDeadline(String taskName, String dateString) {
         try {
             LocalDate date = LocalDate.parse(dateString);
             Task newTask = new Deadline(taskName, date);
             tasks.add(newTask);
             storage.addNewTask(newTask);
-            Ui.show("Got it. I've added this task:\n "
+            return Ui.decorate("Got it. I've added this task:\n "
                     + newTask + "\n" + "Now you have " + tasks.size()
                     + " tasks in the list.\n");
         } catch (DateTimeParseException e) {
-            Ui.show("Invalid date format. Proper format: yyyy-MM-dd");
+            return Ui.decorate("Invalid date format. Proper format: yyyy-MM-dd");
         }
     }
 
@@ -68,40 +68,40 @@ public class TaskList {
      * @param fromDateString start date in yyyy-MM-dd format
      * @param toDateString end date in yyyy-MM-dd format
      */
-    public void addEvent(String taskName, String fromDateString, String toDateString) {
+    public String addEvent(String taskName, String fromDateString, String toDateString) {
         try {
             LocalDate fromDate = LocalDate.parse(fromDateString);
             LocalDate toDate = LocalDate.parse(toDateString);
             Task newTask = new Event(taskName, fromDate, toDate);
             tasks.add(newTask);
             storage.addNewTask(newTask);
-            Ui.show("Got it. I've added this task:\n "
+            return Ui.decorate("Got it. I've added this task:\n "
                     + newTask + "\n" + "Now you have " + tasks.size()
                     + " tasks in the list.\n");
         } catch (DateTimeParseException e) {
-            Ui.show("Invalid date format. Proper format: yyyy-MM-dd");
+            return Ui.decorate("Invalid date format. Proper format: yyyy-MM-dd");
         }
     }
 
     /**
      * Shows all tasks in a numbered list, or message if empty.
      */
-    public void enumList() {
+    public String enumList() {
         if (tasks.isEmpty()) {
-            Ui.show("No task. You're free to play. Yippie!");
+            return Ui.decorate("No task. You're free to play. Yippie!");
         } else {
             String accum = "";
             for (int i = 0; i < tasks.size(); i++) {
                 Task currTask = tasks.get(i);
                 accum += (i + 1) + "." + currTask + "\n";
             }
-            Ui.show(accum);
+            return Ui.decorate(accum);
         }
     }
 
-    public void find(String keyword) {
+    public String find(String keyword) {
         if (tasks.isEmpty()) {
-            Ui.show("No task. You're free to play. Yippie!");
+            return Ui.decorate("No task. You're free to play. Yippie!");
         } else {
             String accum = "";
             int j = 0;
@@ -113,10 +113,9 @@ public class TaskList {
                 }
             }
             if (j == 0) {
-                Ui.show("No search result found.");
-                return;
+                return Ui.decorate("No search result found.");
             }
-            Ui.show(accum);
+            return Ui.decorate(accum);
         }
     }
 
@@ -125,14 +124,14 @@ public class TaskList {
      * @param taskNumber task number (1-based index)
      * @throws AlterEgoException if task number is invalid
      */
-    public void mark(int taskNumber) throws AlterEgoException {
+    public String mark(int taskNumber) throws AlterEgoException {
         if (taskNumber > tasks.size()) {
             throw new AlterEgoException("There's only " + tasks.size() + " tasks here!");
         }
         Task currTask = tasks.get(taskNumber - 1);
         currTask.setDone();
         storage.rewriteFile(tasks);
-        Ui.show("Nice! I've marked this task as done:\n " + currTask);
+        return Ui.decorate("Nice! I've marked this task as done:\n " + currTask);
     }
 
     /**
@@ -140,14 +139,14 @@ public class TaskList {
      * @param taskNumber task number (1-based index)
      * @throws AlterEgoException if task number is invalid
      */
-    public void unmark(int taskNumber) throws AlterEgoException {
+    public String unmark(int taskNumber) throws AlterEgoException {
         if (taskNumber > tasks.size()) {
             throw new AlterEgoException("There's only " + tasks.size() + " tasks here!");
         }
         Task currTask = tasks.get(taskNumber - 1);
         currTask.setUndone();
         storage.rewriteFile(tasks);
-        Ui.show("OK, I've marked this task as not done yet:\n " + currTask);
+        return Ui.decorate("OK, I've marked this task as not done yet:\n " + currTask);
     }
 
     /**
@@ -155,22 +154,22 @@ public class TaskList {
      * @param taskNumber task number (1-based index)
      * @throws AlterEgoException if task number is invalid
      */
-    public void delete(int taskNumber) throws AlterEgoException {
+    public String delete(int taskNumber) throws AlterEgoException {
         if (taskNumber > tasks.size()) {
             throw new AlterEgoException("There's only " + tasks.size() + " tasks here!");
         }
         Task removedTask = tasks.remove(taskNumber - 1);
         storage.rewriteFile(tasks);
-        Ui.show("Noted. I've removed this task:\n " + removedTask + "\n"
+        return Ui.decorate("Noted. I've removed this task:\n " + removedTask + "\n"
                 + "Now you have " + tasks.size() + " tasks in the list.");
     }
 
     /**
      * Clears all tasks, clears storage, and shows confirmation.
      */
-    public void clear() {
+    public String clear() {
         tasks = new ArrayList<Task>();
         storage.clear();
-        Ui.show("Cleared data from storage. You have 0 task now.");
+        return Ui.decorate("Cleared data from storage. You have 0 task now.");
     }
 }
