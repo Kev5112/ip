@@ -68,7 +68,6 @@ public class Event extends Task {
         assert super.equals(obj) : "should not reach here";
         Event other = (Event) obj;
         boolean result = Objects.equals(fromDate, other.fromDate) && Objects.equals(toDate, other.toDate);
-        assert result == other.equals(this) : "equals should be symmetric";
         return result;
     }
 

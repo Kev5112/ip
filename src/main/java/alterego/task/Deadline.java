@@ -63,7 +63,6 @@ public class Deadline extends Task {
         assert super.equals(obj) : "should not reach here";
         Deadline other = (Deadline) obj;
         boolean result = Objects.equals(date, other.date);
-        assert result == other.equals(this) : "equals should be symmetric";
         return result;
     }
 
