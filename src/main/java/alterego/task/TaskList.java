@@ -46,11 +46,7 @@ public class TaskList {
         assert taskName != null : "Task name cannot be null";
         Task newTask = new ToDo(taskName);
         assert !newTask.isDone() : "New task should start as not done";
-        tasks.add(newTask);
-        String successMessage = "Got it. I've added this task:\n "
-                + newTask + "\n" + "Now you have " + tasks.size()
-                + " tasks in the list.\n";
-        return modifyStorage(() -> storage.addNewTask(newTask), successMessage);
+        return addTask(newTask);
     }
 
     /**
@@ -67,11 +63,7 @@ public class TaskList {
             LocalDate date = LocalDate.parse(dateString);
             Task newTask = new Deadline(taskName, date);
             assert !newTask.isDone() : "New task should start as not done";
-            tasks.add(newTask);
-            String successMessage = "Got it. I've added this task:\n "
-                    + newTask + "\n" + "Now you have " + tasks.size()
-                    + " tasks in the list.\n";
-            return modifyStorage(() -> storage.addNewTask(newTask), successMessage);
+            return addTask(newTask);
         } catch (DateTimeParseException e) {
             return "Invalid date format. Proper format: yyyy-MM-dd";
         }
@@ -93,11 +85,7 @@ public class TaskList {
             LocalDate toDate = LocalDate.parse(toDateString);
             Task newTask = new Event(taskName, fromDate, toDate);
             assert !newTask.isDone() : "New task should start as not done";
-            tasks.add(newTask);
-            String successMessage = "Got it. I've added this task:\n "
-                    + newTask + "\n" + "Now you have " + tasks.size()
-                    + " tasks in the list.\n";
-            return modifyStorage(() -> storage.addNewTask(newTask), successMessage);
+            return addTask(newTask);
         } catch (DateTimeParseException e) {
             return "Invalid date format. Proper format: yyyy-MM-dd";
         }
@@ -109,35 +97,35 @@ public class TaskList {
     public String enumList() {
         if (tasks.isEmpty()) {
             return "No task. You're free to play. Yippie!";
-        } else {
-            String accum = "";
-            for (int i = 0; i < tasks.size(); i++) {
-                Task currTask = tasks.get(i);
-                accum += (i + 1) + "." + currTask + "\n";
-            }
-            return accum;
         }
+
+        String accum = "";
+        for (int i = 0; i < tasks.size(); i++) {
+            Task currTask = tasks.get(i);
+            accum += (i + 1) + "." + currTask + "\n";
+        }
+        return accum;
     }
 
     public String find(String keyword) {
         assert keyword != null : "null keyword should've been handled";
         if (tasks.isEmpty()) {
             return "No task. You're free to play. Yippie!";
-        } else {
-            String accum = "";
-            int j = 0;
-            for (int i = 0; i < tasks.size(); i++) {
-                Task currTask = tasks.get(i);
-                if (currTask.toString().contains(keyword)) {
-                    accum += (j + 1) + "." + currTask + "\n";
-                    j++;
-                }
-            }
-            if (j == 0) {
-                return "No search result found.";
-            }
-            return accum;
         }
+
+        String accum = "";
+        int j = 0;
+        for (int i = 0; i < tasks.size(); i++) {
+            Task currTask = tasks.get(i);
+            if (currTask.toString().contains(keyword)) {
+                accum += (j + 1) + "." + currTask + "\n";
+                j++;
+            }
+        }
+        if (j == 0) {
+            return "No search result found.";
+        }
+        return accum;
     }
 
     /**
@@ -154,7 +142,7 @@ public class TaskList {
         currTask.setDone();
         assert currTask.isDone() : "setDone() doesn't work";
         String successMessage = "Nice! I've marked this task as done:\n " + currTask;
-        return modifyStorage(() -> storage.rewriteFile(tasks), successMessage);
+        return ioExceptionCatcher(() -> storage.rewriteFile(tasks), successMessage);
     }
 
     /**
@@ -171,7 +159,7 @@ public class TaskList {
         currTask.setUndone();
         assert !currTask.isDone() : "setUndone() doesn't work";
         String successMessage = "OK, I've marked this task as not done yet:\n " + currTask;
-        return modifyStorage(() -> storage.rewriteFile(tasks), successMessage);
+        return ioExceptionCatcher(() -> storage.rewriteFile(tasks), successMessage);
     }
 
     /**
@@ -187,7 +175,7 @@ public class TaskList {
         Task removedTask = tasks.remove(taskNumber - 1);
         String successMessage = "Noted. I've removed this task:\n " + removedTask + "\n"
                 + "Now you have " + tasks.size() + " tasks in the list.";
-        return modifyStorage(() -> storage.rewriteFile(tasks), successMessage);
+        return ioExceptionCatcher(() -> storage.rewriteFile(tasks), successMessage);
     }
 
     /**
@@ -196,10 +184,17 @@ public class TaskList {
     public String clear() {
         tasks = new ArrayList<Task>();
         String successMessage = "Cleared data from storage. You have 0 task now.";
-        return modifyStorage(storage::clear, successMessage);
+        return ioExceptionCatcher(storage::clear, successMessage);
     }
 
-    private String modifyStorage(FileOperation fileOperation, String successMessage) {
+    private String addTask(Task newTask) {
+        tasks.add(newTask);
+        String message = "Got it. I've added this task:\n " + newTask
+                + "\nNow you have " + tasks.size() + " tasks in the list.\n";
+        return ioExceptionCatcher(() -> storage.addNewTask(newTask), message);
+    }
+
+    private String ioExceptionCatcher(FileOperation fileOperation, String successMessage) {
         try {
             fileOperation.execute();
             return successMessage;
