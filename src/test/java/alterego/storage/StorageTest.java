@@ -14,11 +14,8 @@ import alterego.task.Task;
 import alterego.task.TaskList;
 import alterego.task.ToDo;
 
-
-
-
 public class StorageTest {
-    private Storage storage = new Storage("./data/alterego.AlterEgo.txt");
+    private Storage storage = new Storage("./data/alterego.AlterEgo1.txt");
     private TaskList taskList = new TaskList(storage);
 
     @Test

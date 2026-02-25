@@ -64,8 +64,9 @@ public class Parser {
     }
 
     private void checkValidity(String input, Command command) throws AlterEgoException {
-        if (command == Command.BYE || command == Command.CLEAR ||
-                command == Command.LIST || command == Command.HELP) {
+        assert command != null : "command should not be null by now";
+        if (command == Command.BYE || command == Command.CLEAR
+                || command == Command.LIST || command == Command.HELP) {
             return;
         }
 
