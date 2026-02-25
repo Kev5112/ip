@@ -9,22 +9,6 @@ import alterego.command.Command;
  */
 public class Ui {
     public static final String LINE = "____________________________________________________________\n";
-    private Scanner scanner;
-
-    /**
-     * Creates a new UI handler.
-     */
-    public Ui() {
-        this.scanner = new Scanner(System.in);
-    }
-
-    /**
-     * Reads a command from user input.
-     * @return the command string
-     */
-    public String readCommand() {
-        return scanner.nextLine();
-    }
 
     /**
      * Shows welcome message.
@@ -38,8 +22,8 @@ public class Ui {
     /**
      * Shows goodbye message.
      */
-    public static void bye() {
-        show("Bye. Hope to see you again soon!");
+    public static String bye() {
+        return decorate("Bye. Hope to see you again soon!)");
     }
 
     /**
@@ -65,13 +49,5 @@ public class Ui {
             accum = accum + " " + line + "\n";
         }
         return Ui.LINE + accum + Ui.LINE;
-    }
-
-    /**
-     * Displays a decorated message to the user.
-     * @param message message to display
-     */
-    public static void show(String message) {
-        System.out.println(decorate(message));
     }
 }

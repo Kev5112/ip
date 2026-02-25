@@ -2,6 +2,7 @@ package alterego.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -18,10 +19,10 @@ import alterego.task.ToDo;
 
 public class StorageTest {
     private Storage storage = new Storage("./data/alterego.AlterEgo.txt");
-    private TaskList taskList = new TaskList(new ArrayList<>(), storage);
+    private TaskList taskList = new TaskList(storage);
 
     @Test
-    public void addLoadTest() {
+    public void addLoadTest() throws IOException {
         storage.clear();
         taskList.addToDo("a_task_name");
         taskList.addDeadline("a_task_name", "2026-04-20");

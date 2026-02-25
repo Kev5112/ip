@@ -1,5 +1,7 @@
 package alterego.task;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -17,11 +19,14 @@ public class TaskList {
 
     /**
      * Creates TaskList with given tasks and storage.
-     * @param tasks initial tasks
      * @param storage storage handler
      */
-    public TaskList(ArrayList<Task> tasks, Storage storage) {
-        this.tasks = tasks;
+    public TaskList(Storage storage) {
+        try {
+            this.tasks = storage.loadTasks();
+        } catch (FileNotFoundException e) {
+            this.tasks = new ArrayList<Task>();
+        }
         this.storage = storage;
     }
 
@@ -33,10 +38,10 @@ public class TaskList {
     public String addToDo(String taskName) {
         Task newTask = new ToDo(taskName);
         tasks.add(newTask);
-        storage.addNewTask(newTask);
-        return Ui.decorate("Got it. I've added this task:\n "
+        String successMessage = Ui.decorate("Got it. I've added this task:\n "
                 + newTask + "\n" + "Now you have " + tasks.size()
                 + " tasks in the list.\n");
+        return modifyStorage(() -> storage.addNewTask(newTask), successMessage);
     }
 
     /**
@@ -51,10 +56,10 @@ public class TaskList {
             LocalDate date = LocalDate.parse(dateString);
             Task newTask = new Deadline(taskName, date);
             tasks.add(newTask);
-            storage.addNewTask(newTask);
-            return Ui.decorate("Got it. I've added this task:\n "
+            String successMessage = Ui.decorate("Got it. I've added this task:\n "
                     + newTask + "\n" + "Now you have " + tasks.size()
                     + " tasks in the list.\n");
+            return modifyStorage(() -> storage.addNewTask(newTask), successMessage);
         } catch (DateTimeParseException e) {
             return Ui.decorate("Invalid date format. Proper format: yyyy-MM-dd");
         }
@@ -74,10 +79,10 @@ public class TaskList {
             LocalDate toDate = LocalDate.parse(toDateString);
             Task newTask = new Event(taskName, fromDate, toDate);
             tasks.add(newTask);
-            storage.addNewTask(newTask);
-            return Ui.decorate("Got it. I've added this task:\n "
+            String successMessage = Ui.decorate("Got it. I've added this task:\n "
                     + newTask + "\n" + "Now you have " + tasks.size()
                     + " tasks in the list.\n");
+            return modifyStorage(() -> storage.addNewTask(newTask), successMessage);
         } catch (DateTimeParseException e) {
             return Ui.decorate("Invalid date format. Proper format: yyyy-MM-dd");
         }
@@ -130,8 +135,8 @@ public class TaskList {
         }
         Task currTask = tasks.get(taskNumber - 1);
         currTask.setDone();
-        storage.rewriteFile(tasks);
-        return Ui.decorate("Nice! I've marked this task as done:\n " + currTask);
+        String successMessage = Ui.decorate("Nice! I've marked this task as done:\n " + currTask);
+        return modifyStorage(() -> storage.rewriteFile(tasks), successMessage);
     }
 
     /**
@@ -145,8 +150,8 @@ public class TaskList {
         }
         Task currTask = tasks.get(taskNumber - 1);
         currTask.setUndone();
-        storage.rewriteFile(tasks);
-        return Ui.decorate("OK, I've marked this task as not done yet:\n " + currTask);
+        String successMessage = Ui.decorate("OK, I've marked this task as not done yet:\n " + currTask);
+        return modifyStorage(() -> storage.rewriteFile(tasks), successMessage);
     }
 
     /**
@@ -159,9 +164,9 @@ public class TaskList {
             throw new AlterEgoException("There's only " + tasks.size() + " tasks here!");
         }
         Task removedTask = tasks.remove(taskNumber - 1);
-        storage.rewriteFile(tasks);
-        return Ui.decorate("Noted. I've removed this task:\n " + removedTask + "\n"
+        String successMessage = Ui.decorate("Noted. I've removed this task:\n " + removedTask + "\n"
                 + "Now you have " + tasks.size() + " tasks in the list.");
+        return modifyStorage(() -> storage.rewriteFile(tasks), successMessage);
     }
 
     /**
@@ -169,7 +174,21 @@ public class TaskList {
      */
     public String clear() {
         tasks = new ArrayList<Task>();
-        storage.clear();
-        return Ui.decorate("Cleared data from storage. You have 0 task now.");
+        String successMessage = Ui.decorate("Cleared data from storage. You have 0 task now.");
+        return modifyStorage(storage::clear, successMessage);
+    }
+
+    private String modifyStorage(FileOperation fileOperation, String successMessage) {
+        try {
+            fileOperation.execute();
+            return successMessage;
+        } catch (IOException e) {
+            return Ui.decorate("Error: IO exception");
+        }
+    }
+
+    @FunctionalInterface
+    private interface FileOperation {
+        void execute() throws IOException;
     }
 }

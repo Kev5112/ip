@@ -32,68 +32,51 @@ public class Storage {
     /**
      * Clears all tasks from storage file.
      */
-    public void clear() {
-        try {
-            FileWriter fw = new FileWriter(filePath);
-            fw.write("");
-            fw.close();
-        } catch (IOException e) {
-            Ui.show("Error");
-        }
+    public void clear() throws IOException {
+        FileWriter fw = new FileWriter(filePath);
+        fw.write("");
+        fw.close();
     }
 
     /**
      * Overwrites storage file with current task list/state.
      * @param tasks list of tasks to save
      */
-    public void rewriteFile(ArrayList<Task> tasks) {
-        try {
-            FileWriter fw = new FileWriter(filePath);
-            for (Task task : tasks) {
-                fw.write(task.toFileFormat() + System.lineSeparator());
-            }
-            fw.close();
-        } catch (IOException e) {
-            Ui.show("Error");
+    public void rewriteFile(ArrayList<Task> tasks) throws IOException {
+        FileWriter fw = new FileWriter(filePath);
+        for (Task task : tasks) {
+            fw.write(task.toFileFormat() + System.lineSeparator());
         }
+        fw.close();
     }
 
     /**
      * Appends a single task to storage file.
      * @param task task to append to file
      */
-    public void addNewTask(Task task) {
-        try {
-            FileWriter fw = new FileWriter(filePath, true);
-            fw.write(task.toFileFormat() + System.lineSeparator());
-            fw.close();
-        } catch (IOException e) {
-            Ui.show("Error");
-        }
+    public void addNewTask(Task task) throws IOException {
+        FileWriter fw = new FileWriter(filePath, true);
+        fw.write(task.toFileFormat() + System.lineSeparator());
+        fw.close();
     }
 
     /**
      * Loads tasks from storage file.
      * @return list of loaded tasks, empty if file doesn't exist
      */
-    public ArrayList<Task> loadTasks() {
+    public ArrayList<Task> loadTasks() throws FileNotFoundException {
         ArrayList<Task> tasks = new ArrayList<>();
-
-        try {
-            File f = new File(filePath);
-            Scanner s = new Scanner(f);
-            while (s.hasNextLine()) {
-                String nextString = s.nextLine().trim();
-                if (nextString.isEmpty()) {
-                    continue;
-                }
-                Task nextTask = parseTask(nextString);
-                if (nextTask != null) {
-                    tasks.add(nextTask);
-                }
+        File f = new File(filePath);
+        Scanner s = new Scanner(f);
+        while (s.hasNextLine()) {
+            String nextString = s.nextLine().trim();
+            if (nextString.isEmpty()) {
+                continue;
             }
-        } catch (FileNotFoundException e) {
-            Ui.show("Error");
+            Task nextTask = parseTask(nextString);
+            if (nextTask != null) {
+                tasks.add(nextTask);
+            }
         }
 
         return tasks;

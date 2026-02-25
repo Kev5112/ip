@@ -13,8 +13,7 @@ public class AlterEgo {
 
     private Storage storage;
     private TaskList taskList;
-    private Ui ui;
-    private Parser parser = new Parser();
+    private Parser parser;
 
     /**
      * Constructs an AlterEgo chatbot instance with the specified file path for data storage.
@@ -22,38 +21,8 @@ public class AlterEgo {
      */
     public AlterEgo(String filePath) {
         storage = new Storage(filePath);
-        taskList = new TaskList(storage.loadTasks(), storage);
-        ui = new Ui();
-    }
-
-    /**
-     * Starts the AlterEgo chatbot application.
-     * This method displays a welcome message, then continuously reads user input,
-     * parses and executes commands, until the user inputs "bye".
-     */
-    public void run() {
-        Ui.hello();
-        boolean isExit = false;
-        while (!isExit) {
-            String input = ui.readCommand();
-            try {
-                Parser parser = new Parser();
-                parser.execute(input, taskList);
-                isExit = parser.isExit();
-            } catch (AlterEgoException e) {
-                Ui.show(e.getMessage());
-            }
-        }
-        Ui.bye();
-    }
-
-    /**
-     * Main method to start the process. creates a new AlterEgo instance and runs the process.
-     * @param args
-     */
-    public static void main(String[] args) {
-        AlterEgo chatbot = new AlterEgo("./data/alterego.AlterEgo.txt");
-        chatbot.run();
+        taskList = new TaskList(storage);
+        parser = new Parser(taskList);
     }
 
     public String getResponse(String input) {

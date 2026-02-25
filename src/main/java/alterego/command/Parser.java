@@ -3,18 +3,88 @@ package alterego.command;
 import alterego.AlterEgoException;
 import alterego.task.TaskList;
 import alterego.ui.Ui;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Parses and executes user commands.
  */
 public class Parser {
-    private boolean isExit;
+    private TaskList taskList;
 
-    /**
-     * Creates a new Parser, initializing exit loop as false.
-     */
-    public Parser() {
-        this.isExit = false;
+    public Parser(TaskList taskList) {
+        this.taskList = taskList;
+    }
+
+    public String execute(String input) throws AlterEgoException {
+        if (input.isBlank()) {
+            return "";
+        }
+
+        Command command = commandExtractor(input);
+        checkValidity(input, command);
+        return executeCommand(input, command);
+    }
+
+    public Command commandExtractor(String input) throws AlterEgoException {
+        if (input.equals("bye")) {
+            return Command.BYE;
+        }
+        if (input.equals("clear")) {
+            return Command.CLEAR;
+        }
+        if (input.equals("list")) {
+            return Command.LIST;
+        }
+        if (input.equals("help")) {
+            return Command.HELP;
+        }
+        if (input.startsWith("find")) {
+            return Command.FIND;
+        }
+        if (input.startsWith("delete")) {
+            return Command.DELETE;
+        }
+        if (input.startsWith("mark")) {
+            return Command.MARK;
+        }
+        if (input.startsWith("unmark")) {
+            return Command.UNMARK;
+        }
+        if (input.startsWith("todo")) {
+            return Command.TODO;
+        }
+        if (input.startsWith("deadline")) {
+            return Command.DEADLINE;
+        }
+        if (input.startsWith("event")) {
+            return Command.EVENT;
+        }
+        throw new AlterEgoException("I don't understand that. Use 'help' to get the list of commands.");
+    }
+
+    public void checkValidity(String input, Command command) throws AlterEgoException {
+        if (command == Command.BYE || command == Command.CLEAR ||
+                command == Command.LIST || command == Command.HELP) {
+            return;
+        }
+
+        String commandName = command.toString();
+        //assert commandName is lowercase (toString() method)
+        if (input.length() <= commandName.length()) {
+            throw new AlterEgoException(StringUtils.capitalize(commandName) + " what?");
+        }
+    }
+
+    public String executeCommand(String input, Command command) throws AlterEgoException {
+
+    }
+
+    public String handleDeadline(String input) {
+
+    }
+
+    public String handleEvent(String input) {
+
     }
 
     /**
@@ -41,13 +111,15 @@ public class Parser {
             return Ui.help();
         }
         if (input.startsWith("find")) {
-            if (input.length() < 6) {
-                throw new AlterEgoException("Delete what?");
+            assert input.length() >= "find".length() : "Find command length too short";
+
+            if (input.length() < "find".length() + 1) {
+                throw new AlterEgoException("Find what?");
             }
             return taskList.find(input.substring(5));
         }
         if (input.startsWith("delete")) {
-            if (input.length() < 8) {
+            if (input.length() < "delete".length() + 1) {
                 throw new AlterEgoException("Delete what?");
             }
             String num = input.substring(7);
@@ -55,7 +127,7 @@ public class Parser {
             return taskList.delete(taskNumber);
         }
         if (input.startsWith("mark")) {
-            if (input.length() < 6) {
+            if (input.length() < "mark".length() + 1) {
                 throw new AlterEgoException("Mark what?");
             }
             String num = input.substring(5);
@@ -63,7 +135,7 @@ public class Parser {
             return taskList.mark(taskNumber);
         }
         if (input.startsWith("unmark")) {
-            if (input.length() < 8) {
+            if (input.length() < "unmark".length() + 1) {
                 throw new AlterEgoException("Unmark what?");
             }
             String num = input.substring(7);
@@ -71,7 +143,7 @@ public class Parser {
             return taskList.unmark(taskNumber);
         }
         if (input.startsWith("todo")) {
-            if (input.length() < 6) {
+            if (input.length() < "todo".length() + 1) {
                 throw new AlterEgoException("Error: you didn't input the description??");
             }
             String taskName = input.substring(5);
@@ -106,11 +178,4 @@ public class Parser {
         throw new AlterEgoException("I don't understand that. Use 'help' to get the list of commands.");
     }
 
-    /**
-     * Checks if exit command has been received.
-     * @return true if user entered "bye", false otherwise
-     */
-    public boolean isExit() {
-        return isExit;
-    }
 }
