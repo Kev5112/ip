@@ -1,4 +1,4 @@
-package alterego;
+package alterego.utils;
 
 /**
  * Custom exception for AlterEgo application errors.

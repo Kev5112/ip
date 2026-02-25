@@ -5,23 +5,20 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import alterego.AlterEgoException;
+import alterego.utils.AlterEgoException;
 import alterego.task.Deadline;
 import alterego.task.Event;
 import alterego.task.Task;
 import alterego.task.ToDo;
+import alterego.utils.DateUtils;
 
 /**
  * Handles file storage operations for tasks.
  */
 public class Storage {
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM d yyyy");
-
     private final String filePath;
 
     /**
@@ -140,7 +137,7 @@ public class Storage {
                     + "Please edit manually or perform 'clear'");
         }
 
-        LocalDate date = parseDate(parts[3]);
+        LocalDate date = DateUtils.parseDateFromFile(parts[3]);
         Deadline deadline = new Deadline(parts[2], date);
 
         if (parts[1].equals("1")) {
@@ -160,20 +157,12 @@ public class Storage {
             throw new AlterEgoException("Event should have two dates separated by ' -> '");
         }
 
-        LocalDate fromDate = parseDate(dates[0]);
-        LocalDate toDate = parseDate(dates[1]);
+        LocalDate fromDate = DateUtils.parseDateFromFile(dates[0]);
+        LocalDate toDate = DateUtils.parseDateFromFile(dates[1]);
         Event event = new Event(parts[2], fromDate, toDate);
         if (parts[1].equals("1")) {
             event.setDone();
         }
         return event;
-    }
-
-    private LocalDate parseDate(String dateStr) throws AlterEgoException {
-        try {
-            return LocalDate.parse(dateStr, DATE_FORMATTER);
-        } catch (DateTimeParseException e) {
-            throw new AlterEgoException("Invalid date format: " + dateStr);
-        }
     }
 }

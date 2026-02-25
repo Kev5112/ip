@@ -1,6 +1,6 @@
 package alterego.command;
 
-import alterego.AlterEgoException;
+import alterego.utils.AlterEgoException;
 import alterego.storage.Storage;
 import alterego.task.TaskList;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,7 +63,7 @@ public class ParserTest {
 
     @Test
     void execute_deadlineCommand_validInput_addsDeadline() throws AlterEgoException {
-        String result = parser.execute("deadline Return book /by 2024-12-01");
+        String result = parser.execute("deadline Return book /by 01-12-2024");
         assertTrue(result.contains("Return book"));
 
         String listResult = parser.execute("list");
@@ -80,13 +80,22 @@ public class ParserTest {
 
     @Test
     void execute_eventCommand_validInput_addsEvent() throws AlterEgoException {
-        String result = parser.execute("event Conference /from 2024-12-01 /to 2024-12-03");
+        String result = parser.execute("event Conference /from 01-12-2024 /to 03-12-2024");
         assertTrue(result.contains("Conference"));
 
         String listResult = parser.execute("list");
         assertTrue(listResult.contains("Conference"));
         assertTrue(listResult.contains("from:"));
         assertTrue(listResult.contains("to:"));
+    }
+
+    @Test
+    void execute_eventCommand_validInput_overlappingEvent() throws AlterEgoException {
+        parser.execute("event Conference /from 01-12-2024 /to 03-12-2024");
+        String result = parser.execute("event Conference /from 01-12-2025 /to 03-12-2025");
+        assertFalse(result.contains("Overlapping"));
+        result = parser.execute("event Conference /from 01-12-2024 /to 05-12-2024");
+        assertTrue(result.contains("Overlapping"));
     }
 
     @Test

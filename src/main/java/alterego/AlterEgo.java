@@ -3,7 +3,7 @@ package alterego;
 import alterego.command.Parser;
 import alterego.storage.Storage;
 import alterego.task.TaskList;
-import alterego.ui.Ui;
+import alterego.utils.AlterEgoException;
 
 /**
  * The main class for the AlterEgo chatbot application.

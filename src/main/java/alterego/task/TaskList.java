@@ -3,13 +3,13 @@ package alterego.task;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import alterego.AlterEgoException;
+import alterego.utils.AlterEgoException;
 import alterego.storage.Storage;
+import alterego.utils.DateUtils;
 
 /**
  * Manages task operations.
@@ -61,14 +61,10 @@ public class TaskList {
     public String addDeadline(String taskName, String dateString) {
         assert taskName != null : "Task name cannot be null";
         assert dateString != null : "Date string cannot be null";
-        try {
-            LocalDate date = LocalDate.parse(dateString);
-            Task newTask = new Deadline(taskName, date);
-            assert !newTask.isDone() : "New task should start as not done";
-            return addTask(newTask);
-        } catch (DateTimeParseException e) {
-            return "Invalid date format. Proper format: yyyy-MM-dd";
-        }
+        LocalDate date = DateUtils.parseDateFromInput(dateString);
+        Task newTask = new Deadline(taskName, date);
+        assert !newTask.isDone() : "New task should start as not done";
+        return addTask(newTask);
     }
 
     /**
@@ -82,15 +78,19 @@ public class TaskList {
     public String addEvent(String taskName, String fromDateString, String toDateString) {
         assert taskName != null : "Task name cannot be null";
         assert fromDateString != null && toDateString != null : "Date string cannot be null";
-        try {
-            LocalDate fromDate = LocalDate.parse(fromDateString);
-            LocalDate toDate = LocalDate.parse(toDateString);
-            Task newTask = new Event(taskName, fromDate, toDate);
-            assert !newTask.isDone() : "New task should start as not done";
-            return addTask(newTask);
-        } catch (DateTimeParseException e) {
-            return "Invalid date format. Proper format: yyyy-MM-dd";
+        LocalDate fromDate = DateUtils.parseDateFromInput(fromDateString);
+        LocalDate toDate = DateUtils.parseDateFromInput(toDateString);
+        if (toDate.isBefore(fromDate)) {
+            throw new AlterEgoException("Error: End date cannot be before start date!");
         }
+        Task newTask = new Event(taskName, fromDate, toDate);
+        assert !newTask.isDone() : "New task should start as not done";
+        String warning = "";
+        if (hasOverlap(fromDate, toDate)) {
+            warning = "\nWarning: Overlapping timing!";
+        }
+        String message = addTask(newTask);
+        return message + warning;
     }
 
     /**
@@ -184,6 +184,15 @@ public class TaskList {
         String message = "Got it. I've added this task:\n " + newTask
                 + "\nNow you have " + tasks.size() + " tasks in the list.\n";
         return ioExceptionCatcher(() -> storage.addNewTask(newTask), message);
+    }
+
+    private boolean hasOverlap(LocalDate newFrom, LocalDate newTo) {
+        int overlapCount = Math.toIntExact(tasks.stream()
+                .filter(task -> task instanceof Event)
+                .map(task -> (Event) task)
+                .filter(event -> newTo.isAfter(event.getFromDate()) && newFrom.isBefore(event.getToDate()))
+                .count());
+        return overlapCount > 0;
     }
 
     private String ioExceptionCatcher(FileOperation fileOperation, String successMessage) {

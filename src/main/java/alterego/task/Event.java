@@ -24,6 +24,14 @@ public class Event extends Task {
         this.toDate = toDate;
     }
 
+    public LocalDate getFromDate() {
+        return fromDate;
+    }
+
+    public LocalDate getToDate() {
+        return toDate;
+    }
+
     /**
      * Converts event to format for file storage.
      * Format: "E | 1/0 | description | fromDate -> toDate"

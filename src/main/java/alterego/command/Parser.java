@@ -1,6 +1,6 @@
 package alterego.command;
 
-import alterego.AlterEgoException;
+import alterego.utils.AlterEgoException;
 import alterego.task.TaskList;
 import alterego.ui.Ui;
 
