@@ -21,7 +21,6 @@ public class Parser {
         }
 
         Command command = commandExtractor(input);
-        assert command != null : "Command should never be null";
         checkValidity(input, command);
         return executeCommand(input, command);
     }
@@ -64,8 +63,9 @@ public class Parser {
     }
 
     private void checkValidity(String input, Command command) throws AlterEgoException {
-        if (command == Command.BYE || command == Command.CLEAR ||
-                command == Command.LIST || command == Command.HELP) {
+        assert command != null : "command should not be null by now";
+        if (command == Command.BYE || command == Command.CLEAR
+                || command == Command.LIST || command == Command.HELP) {
             return;
         }
 
@@ -177,9 +177,7 @@ public class Parser {
         case UNMARK:
             return "Unmark what?";
         case TODO:
-            return "Error: you didn't input the description??";
         case DEADLINE:
-            return "Error: you didn't input the description??";
         case EVENT:
             return "Error: you didn't input the description??";
         default:
