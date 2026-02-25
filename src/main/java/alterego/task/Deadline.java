@@ -8,6 +8,7 @@ import java.util.Objects;
  */
 public class Deadline extends Task {
     private LocalDate date;
+    private String stringType = "[D]";
 
     /**
      * Creates a new Deadline task.
@@ -16,11 +17,8 @@ public class Deadline extends Task {
      */
     public Deadline(String taskName, LocalDate date) {
         super(taskName);
+        assert date != null : "Deadline date cannot be null";
         this.date = date;
-    }
-
-    private String stringType() {
-        return "[D]";
     }
 
     /**
@@ -41,7 +39,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return this.stringType() + super.getCheckbox() + " "
+        return this.stringType + super.getCheckbox() + " "
                 + super.toString() + " (by: " + dateFormat(date) + ")";
     }
 
@@ -62,9 +60,11 @@ public class Deadline extends Task {
         if (!super.equals(obj)) {
             return false;
         }
-
+        assert super.equals(obj) : "should not reach here";
         Deadline other = (Deadline) obj;
-        return Objects.equals(date, other.date);
+        boolean result = Objects.equals(date, other.date);
+        assert result == other.equals(this) : "equals should be symmetric";
+        return result;
     }
 
     /**

@@ -11,6 +11,7 @@ public class Parser {
     private TaskList taskList;
 
     public Parser(TaskList taskList) {
+        assert taskList != null : "TaskList is null. Should've been handled in TaskList class";
         this.taskList = taskList;
     }
 
@@ -20,6 +21,7 @@ public class Parser {
         }
 
         Command command = commandExtractor(input);
+        assert command != null : "Command should never be null";
         checkValidity(input, command);
         return executeCommand(input, command);
     }
@@ -78,24 +80,27 @@ public class Parser {
 
     private void validateIndex(String input, Command command) throws AlterEgoException {
         String numString = extractIndexString(input, command);
-        if (!numString.matches("-?\\d+")) {
-            throw new AlterEgoException("Input should be a number!");
-        }
-        if (Integer.parseInt(numString) < 1) {
-            throw new AlterEgoException("Invalid task number!");
+        try {
+            int number = Integer.parseInt(numString);
+            if (number < 1) {
+                throw new AlterEgoException("Error: Invalid task number!");
+            }
+        } catch (NumberFormatException e) {
+            throw new AlterEgoException("Error: " + command.toString()
+                    + " should be followed by a digit!");
         }
     }
 
     private String extractIndexString(String input, Command command) throws AlterEgoException {
         String numString = input.substring(command.getStrLen()).trim();
-        assert !numString.contains(" ") : "Number string should have no spaces";
+        assert !numString.contains(" ") : "Number string should have no more spaces";
         return numString;
     }
 
     private String executeCommand(String input, Command command) throws AlterEgoException {
         switch (command) {
         case BYE:
-            return "bye";
+            return Ui.bye();
         case CLEAR:
             return taskList.clear();
         case LIST:
@@ -127,8 +132,15 @@ public class Parser {
             throw new AlterEgoException("Error: you didn't input the deadline. "
                     + "Use '/by' to indicate the deadline");
         }
+
+        assert byIndex > Command.DEADLINE.getStrLen() : "/by should be after deadline command";
+
         String taskName = input.substring(Command.DEADLINE.getStrLen(), byIndex).trim();
         String dateString = input.substring(byIndex + "/by".length()).trim();
+
+        assert taskName != null : "Task name should not be null";
+        assert dateString != null : "Date string should not be null";
+
         return taskList.addDeadline(taskName, dateString);
     }
 
@@ -139,9 +151,18 @@ public class Parser {
             throw new AlterEgoException("Error: you fail to input the timing. "
                     + "Use '/from' to indicate the start and '/to' to indicate the end");
         }
+
+        assert fromIndex > Command.EVENT.getStrLen() : "/from should be after event command";
+        assert toIndex > fromIndex : "/to should come after /from";
+
         String taskName = input.substring(Command.EVENT.getStrLen(), fromIndex).trim();
         String fromDate = input.substring(fromIndex + "/from".length(), toIndex).trim();
         String toDate = input.substring(toIndex + "/to".length()).trim();
+
+        assert taskName != null : "Task name should not be null";
+        assert fromDate != null : "From date should not be null";
+        assert toDate != null : "To date should not be null";
+
         return taskList.addEvent(taskName, fromDate, toDate);
     }
 

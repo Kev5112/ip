@@ -1,6 +1,8 @@
 package alterego.ui;
 
 import alterego.AlterEgo;
+import alterego.task.TaskList;
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -9,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class MainWindow extends AnchorPane {
     @FXML
@@ -29,14 +32,20 @@ public class MainWindow extends AnchorPane {
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
-
-        dialogContainer.getChildren().add(
-                DialogBox.getAlterEgoDialog(Ui.hello(), alterEgoImage)
-        );
     }
 
     public void setAlterEgo(AlterEgo a) {
         alterEgo = a;
+        showWelcomeMessage();
+    }
+
+    private void showWelcomeMessage() {
+        assert alterEgo != null : "Alter Ego hasn't been initialised?";
+        dialogContainer.getChildren().add(
+                DialogBox.getAlterEgoDialog(Ui.decorate(Ui.hello()
+                                + (alterEgo.getLoadStatus() != null ? "\n" + alterEgo.getLoadStatus() : "")),
+                        alterEgoImage)
+        );
     }
 
     public void setStage(Stage stage) {
@@ -50,14 +59,15 @@ public class MainWindow extends AnchorPane {
 
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getAlterEgoDialog(response, alterEgoImage)
+                DialogBox.getAlterEgoDialog(Ui.decorate(response), alterEgoImage)
         );
 
         userInput.clear();
 
         if (input.equals("bye")) {
-            Thread.sleep(1000);
-            stage.close();
+            PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
+            delay.setOnFinished(event -> stage.close());
+            delay.play();
         }
     }
 }

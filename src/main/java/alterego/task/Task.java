@@ -16,6 +16,7 @@ public abstract class Task {
      * @param taskName description of the task
      */
     public Task(String taskName) {
+        assert taskName != null : "Task name cannot be null";
         this.taskName = taskName;
         this.isDone = false;
     }
@@ -45,6 +46,7 @@ public abstract class Task {
     protected String getCheckbox() {
         return this.isDone() ? "[X]" : "[ ]";
     }
+
     /**
      * Converts task to file storage format.
      * @return formatted string for file storage
@@ -56,6 +58,7 @@ public abstract class Task {
      * @return task name
      */
     public String toString() {
+        assert taskName != null : "Task name should not be null when calling toString";
         return taskName;
     }
 
@@ -65,13 +68,13 @@ public abstract class Task {
      * @return formatted date string
      */
     public static String dateFormat(LocalDate date) {
+        assert date != null : "Date cannot be null";
         return date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
     }
 
     /**
      * Compares this task with another object for equality.
      * Two tasks are equal if they have same description and done status.
-     * This method (including overriden one) is AI-generated
      * @param obj object to compare with
      * @return true if tasks are equal
      */
@@ -85,12 +88,13 @@ public abstract class Task {
         }
 
         Task other = (Task) obj;
-        return isDone == other.isDone && Objects.equals(taskName, other.taskName);
+        boolean result = isDone == other.isDone && Objects.equals(taskName, other.taskName);
+        assert result == other.equals(this) : "equals should be symmetric";
+        return result;
     }
 
     /**
      * Returns hash code based on task description and done status.
-     * This method (including overriden one) is AI-generated
      * @return hash code value
      */
     @Override

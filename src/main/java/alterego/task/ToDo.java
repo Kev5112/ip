@@ -4,6 +4,7 @@ package alterego.task;
  * Represents a Todo task with only a description, no date.
  */
 public class ToDo extends Task {
+    private String stringType = "[T]";
 
     /**
      * Creates a new Todo task.
@@ -11,10 +12,6 @@ public class ToDo extends Task {
      */
     public ToDo(String taskName) {
         super(taskName);
-    }
-
-    private String stringType() {
-        return "[T]";
     }
 
     /**
@@ -34,6 +31,6 @@ public class ToDo extends Task {
      */
     @Override
     public String toString() {
-        return this.stringType() + super.getCheckbox() + " " + super.toString();
+        return this.stringType + super.getCheckbox() + " " + super.toString();
     }
 }

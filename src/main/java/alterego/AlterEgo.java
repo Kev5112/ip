@@ -30,7 +30,11 @@ public class AlterEgo {
             String output = parser.execute(input);
             return output;
         } catch (AlterEgoException e) {
-            return Ui.decorate(e.getMessage());
+            return e.getMessage();
         }
+    }
+
+    public String getLoadStatus() {
+        return taskList.getLoadStatus();
     }
 }

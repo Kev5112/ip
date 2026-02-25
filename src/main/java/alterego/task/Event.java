@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Event extends Task {
     private LocalDate fromDate;
     private LocalDate toDate;
+    private String stringType = "[E]";
 
     /**
      * Creates a new Event task.
@@ -18,16 +19,9 @@ public class Event extends Task {
      */
     public Event(String taskName, LocalDate fromDate, LocalDate toDate) {
         super(taskName);
+        assert fromDate != null && fromDate != null : "Event date cannot be null";
         this.fromDate = fromDate;
         this.toDate = toDate;
-    }
-
-    /**
-     * Returns the type indicator for Event tasks.
-     * @return "[E]" string indicating Event type
-     */
-    private String stringType() {
-        return "[E]";
     }
 
     /**
@@ -49,7 +43,7 @@ public class Event extends Task {
 
     @Override
     public String toString() {
-        return this.stringType() + super.getCheckbox() + " "
+        return this.stringType + super.getCheckbox() + " "
                 + super.toString()
                 + " (from: " + dateFormat(fromDate) + " to: " + dateFormat(toDate) + ")";
     }
@@ -71,9 +65,11 @@ public class Event extends Task {
         if (!super.equals(obj)) {
             return false;
         }
-
+        assert super.equals(obj) : "should not reach here";
         Event other = (Event) obj;
-        return Objects.equals(fromDate, other.fromDate) && Objects.equals(toDate, other.toDate);
+        boolean result = Objects.equals(fromDate, other.fromDate) && Objects.equals(toDate, other.toDate);
+        assert result == other.equals(this) : "equals should be symmetric";
+        return result;
     }
 
     /**
