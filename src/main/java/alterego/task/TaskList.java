@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -17,6 +19,7 @@ import alterego.utils.DateUtils;
 public class TaskList {
     private String loadStatus = null;
     private ArrayList<Task> tasks;
+    private Set<Task> taskSet;
     private Storage storage;
 
     public String getLoadStatus() {
@@ -37,6 +40,7 @@ public class TaskList {
             loadStatus = "Warning: File not found. Creating a new list.";
         }
         this.storage = storage;
+        this.taskSet = new HashSet<>(tasks);
     }
 
     /**
@@ -47,7 +51,7 @@ public class TaskList {
     public String addToDo(String taskName) {
         assert taskName != null : "Task name cannot be null";
         Task newTask = new ToDo(taskName);
-        assert !newTask.isDone() : "New task should start as not done";
+        handleDuplicate(newTask);
         return addTask(newTask);
     }
 
@@ -63,7 +67,7 @@ public class TaskList {
         assert dateString != null : "Date string cannot be null";
         LocalDate date = DateUtils.parseDateFromInput(dateString);
         Task newTask = new Deadline(taskName, date);
-        assert !newTask.isDone() : "New task should start as not done";
+        handleDuplicate(newTask);
         return addTask(newTask);
     }
 
@@ -84,7 +88,7 @@ public class TaskList {
             throw new AlterEgoException("Error: End date cannot be before start date!");
         }
         Task newTask = new Event(taskName, fromDate, toDate);
-        assert !newTask.isDone() : "New task should start as not done";
+        handleDuplicate(newTask);
         String warning = "";
         if (hasOverlap(fromDate, toDate)) {
             warning = "\nWarning: Overlapping timing!";
@@ -165,6 +169,7 @@ public class TaskList {
             throw new AlterEgoException("There's only " + tasks.size() + " tasks here!");
         }
         Task removedTask = tasks.remove(taskNumber - 1);
+        taskSet.remove(removedTask);
         String successMessage = "Noted. I've removed this task:\n " + removedTask + "\n"
                 + "Now you have " + tasks.size() + " tasks in the list.";
         return ioExceptionCatcher(() -> storage.rewriteFile(tasks), successMessage);
@@ -175,8 +180,16 @@ public class TaskList {
      */
     public String clear() {
         tasks = new ArrayList<Task>();
+        taskSet = new HashSet<>();
         String successMessage = "Cleared data from storage. You have 0 task now.";
         return ioExceptionCatcher(storage::clear, successMessage);
+    }
+
+    private void handleDuplicate(Task task) throws AlterEgoException {
+        if (taskSet.contains(task)) {
+            throw new AlterEgoException("Task already exists!");
+        }
+        taskSet.add(task);
     }
 
     private String addTask(Task newTask) {
@@ -187,11 +200,11 @@ public class TaskList {
     }
 
     private boolean hasOverlap(LocalDate newFrom, LocalDate newTo) {
-        int overlapCount = Math.toIntExact(tasks.stream()
+        long overlapCount = tasks.stream()
                 .filter(task -> task instanceof Event)
                 .map(task -> (Event) task)
                 .filter(event -> newTo.isAfter(event.getFromDate()) && newFrom.isBefore(event.getToDate()))
-                .count());
+                .count();
         return overlapCount > 0;
     }
 
@@ -200,7 +213,7 @@ public class TaskList {
             fileOperation.execute();
             return successMessage;
         } catch (IOException e) {
-            return "Error: IO exception";
+            throw new AlterEgoException("Error: IO exception");
         }
     }
 
