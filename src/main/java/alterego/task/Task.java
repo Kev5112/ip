@@ -89,7 +89,6 @@ public abstract class Task {
 
         Task other = (Task) obj;
         boolean result = isDone == other.isDone && Objects.equals(taskName, other.taskName);
-        assert result == other.equals(this) : "equals should be symmetric";
         return result;
     }
 
