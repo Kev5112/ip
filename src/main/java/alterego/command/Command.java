@@ -16,8 +16,8 @@ public enum Command {
     EVENT,
     BYE;
 
-    public static Command fromString(String input) {
-        return Command.valueOf(input.toUpperCase());
+    public int getStrLen() {
+        return this.toString().length();
     }
 
     @Override

@@ -27,7 +27,7 @@ public class AlterEgo {
 
     public String getResponse(String input) {
         try {
-            String output = parser.execute(input, taskList);
+            String output = parser.execute(input);
             return output;
         } catch (AlterEgoException e) {
             return Ui.decorate(e.getMessage());
