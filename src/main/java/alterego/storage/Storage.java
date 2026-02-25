@@ -20,6 +20,8 @@ import alterego.task.ToDo;
  * Handles file storage operations for tasks.
  */
 public class Storage {
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM d yyyy");
+
     private final String filePath;
 
     /**
@@ -95,8 +97,8 @@ public class Storage {
     }
 
     private Task parseTask(String line) throws AlterEgoException {
-        Task task = null;
         String[] parts = line.split(" \\| ");
+
         if (parts.length < 3) {
             throw new AlterEgoException("Problem with file: Not enough arguments. "
                     + "Please edit manually or perform 'clear'");
@@ -105,6 +107,7 @@ public class Storage {
             throw new AlterEgoException("Problem with file: task doneness should be '0' or '1'. "
                     + "Please edit manually or perform 'clear'");
         }
+
         switch (parts[0]) {
         case "T":
             return handleTodo(parts);
@@ -137,17 +140,13 @@ public class Storage {
                     + "Please edit manually or perform 'clear'");
         }
 
-        try {
-            LocalDate date = LocalDate.parse(parts[3], DateTimeFormatter.ofPattern("MMM d yyyy"));
-            Deadline deadline = new Deadline(parts[2], date);
+        LocalDate date = parseDate(parts[3]);
+        Deadline deadline = new Deadline(parts[2], date);
 
-            if (parts[1].equals("1")) {
-                deadline.setDone();
-            }
-            return deadline;
-        } catch (DateTimeParseException e) {
-            throw new AlterEgoException("Invalid date format in deadline: " + parts[3]);
+        if (parts[1].equals("1")) {
+            deadline.setDone();
         }
+        return deadline;
     }
 
     private Task handleEvent(String[] parts) throws AlterEgoException {
@@ -161,17 +160,20 @@ public class Storage {
             throw new AlterEgoException("Event should have two dates separated by ' -> '");
         }
 
-        try {
-            LocalDate fromDate = LocalDate.parse(dates[0], DateTimeFormatter.ofPattern("MMM d yyyy"));
-            LocalDate toDate = LocalDate.parse(dates[1], DateTimeFormatter.ofPattern("MMM d yyyy"));
-            Event event = new Event(parts[2], fromDate, toDate);
-            if (parts[1].equals("1")) {
-                event.setDone();
-            }
-            return event;
-        } catch (DateTimeParseException e) {
-            throw new AlterEgoException("Invalid date format in event: " + parts[3]);
+        LocalDate fromDate = parseDate(dates[0]);
+        LocalDate toDate = parseDate(dates[1]);
+        Event event = new Event(parts[2], fromDate, toDate);
+        if (parts[1].equals("1")) {
+            event.setDone();
         }
+        return event;
     }
 
+    private LocalDate parseDate(String dateStr) throws AlterEgoException {
+        try {
+            return LocalDate.parse(dateStr, DATE_FORMATTER);
+        } catch (DateTimeParseException e) {
+            throw new AlterEgoException("Invalid date format: " + dateStr);
+        }
+    }
 }
