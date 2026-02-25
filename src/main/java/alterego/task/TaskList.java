@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import alterego.AlterEgoException;
 import alterego.storage.Storage;
@@ -99,12 +101,9 @@ public class TaskList {
             return "No task. You're free to play. Yippie!";
         }
 
-        String accum = "";
-        for (int i = 0; i < tasks.size(); i++) {
-            Task currTask = tasks.get(i);
-            accum += (i + 1) + "." + currTask + "\n";
-        }
-        return accum;
+        return IntStream.range(0, tasks.size())
+                .mapToObj(i -> (i + 1) + "." + tasks.get(i) + "\n")
+                .collect(Collectors.joining()) + "\n";
     }
 
     public String find(String keyword) {
@@ -113,19 +112,12 @@ public class TaskList {
             return "No task. You're free to play. Yippie!";
         }
 
-        String accum = "";
-        int j = 0;
-        for (int i = 0; i < tasks.size(); i++) {
-            Task currTask = tasks.get(i);
-            if (currTask.toString().contains(keyword)) {
-                accum += (j + 1) + "." + currTask + "\n";
-                j++;
-            }
-        }
-        if (j == 0) {
-            return "No search result found.";
-        }
-        return accum;
+        String result = IntStream.range(0, tasks.size())
+                .filter(i -> tasks.get(i).toString().contains(keyword))
+                .mapToObj(i -> (i + 1) + "." + tasks.get(i) + "\n")
+                .collect(Collectors.joining());
+
+        return result.isEmpty() ? "No search result found." : result + "\n";
     }
 
     /**
