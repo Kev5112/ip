@@ -1,4 +1,4 @@
-# alterego.AlterEgo User Guide
+# AlterEgo User Guide
 
 // Product screenshot goes here
 ![Product Screenshot](Ui.png)
