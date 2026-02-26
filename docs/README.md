@@ -40,8 +40,8 @@ AlterEgo is a **desktop chatbot app** for managing tasks and contacts, optimized
 - `delete c{index}`
     - Example: `delete c1`
 #### Assign contact for a task:
-- `assign t{index} /to {name}`
-    - Example: `assign t1 /to John`
+- `assign {index} /to {name}`
+    - Example: `assign 1 /to John`
 #### View all contacts:
 - `contactlist`
     - Example: `contactlist`
