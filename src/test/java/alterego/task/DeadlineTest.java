@@ -2,10 +2,9 @@ package alterego.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.LocalDate;
+import org.junit.jupiter.api.Test;
 
 import alterego.utils.DateUtils;
-import org.junit.jupiter.api.Test;
 
 public class DeadlineTest {
     private Deadline deadline = new Deadline("a_task_name", DateUtils.parseDateFromInput("20-04-2026"));

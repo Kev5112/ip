@@ -1,19 +1,14 @@
 package alterego.ui;
 
-import java.util.Scanner;
-
 import alterego.command.Command;
 
 /**
  * User interface handler for AlterEgo chatbot.
  */
 public class Ui {
-    public static final String LINE = "";
-
     /**
-     * Shows welcome message.
-     *
-     * @return
+     * Returns welcome message.
+     * @return Welcome message
      */
     public static String hello() {
         return "Hello, I'm Alter Ego!\n\nWhat can I do for you?\n\n"
@@ -21,14 +16,17 @@ public class Ui {
     }
 
     /**
-     * Shows goodbye message.
+     * Returns the goodbye message displayed when exiting the application.
+     * @return Goodbye message
      */
     public static String bye() {
         return "Bye. Hope to see you again soon!";
     }
 
     /**
-     * Shows all available commands.
+     * Returns a categorized list of all available commands.
+     * Commands are grouped by functionality: task adding, contact adding, view, and other.
+     * @return Formatted help text with all commands
      */
     public static String help() {
         String accum = "Task adding: \n";
@@ -50,16 +48,11 @@ public class Ui {
     }
 
     /**
-     * Decorates the message.
+     * For future needs when string formatting is needed.
      * @param message message to format
      * @return formatted message
      */
     public static String decorate(String message) {
-        String[] lines = message.split("\\R");
-        String accum = "";
-        for (String line : lines) {
-            accum = accum + " " + line + "\n";
-        }
-        return Ui.LINE + accum + Ui.LINE;
+        return message;
     }
 }

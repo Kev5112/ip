@@ -1,22 +1,28 @@
 package alterego.task;
 
-import alterego.contact.Contact;
-import alterego.storage.TaskStorage;
-import alterego.utils.AlterEgoException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import alterego.contact.Contact;
+import alterego.storage.TaskStorage;
+import alterego.utils.AlterEgoException;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * AI generated testcase. For personal use only.
+ * The testcases below are AI generated, with personal
+ * modifications according to the intended behavior of the Parser
  */
 public class TaskListTest {
 

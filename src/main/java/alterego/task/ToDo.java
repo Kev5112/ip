@@ -15,9 +15,10 @@ public class ToDo extends Task {
     }
 
     /**
-     * Converts task to format for file storage.
-     * Format: "T | 1/0 | description"
-     * @return formatted string for saving to file
+     * Converts this todo task to file storage format.
+     * Format: T | 1/0 | description
+     * Format: T | 1/0 | description | assignedName|assignedRelationship
+     * @return Formatted string for file storage
      */
     @Override
     public String toFileFormat() {
@@ -33,7 +34,7 @@ public class ToDo extends Task {
     }
     /**
      * Returns string representation for display.
-     * Format: "[T][X/""] description"
+     * Format: [T][X/""] description [-> contact]
      * @return formatted display string
      */
     @Override

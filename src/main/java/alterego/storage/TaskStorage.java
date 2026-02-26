@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import alterego.contact.Contact;
-import alterego.utils.AlterEgoException;
 import alterego.task.Deadline;
 import alterego.task.Event;
 import alterego.task.Task;
 import alterego.task.ToDo;
+import alterego.utils.AlterEgoException;
 import alterego.utils.DateUtils;
 
 /**
@@ -23,7 +23,7 @@ public class TaskStorage {
     private final String filePath;
 
     /**
-     * Set a file corresponding to the path as the storage.
+     * Sets a file corresponding to the path as the storage.
      * @param path file path for storing tasks
      */
     public TaskStorage(String path) {
@@ -41,7 +41,7 @@ public class TaskStorage {
     }
 
     /**
-     * Overwrites storage file with current task list/state.
+     * Rewrites storage file with current task list and its state.
      * @param tasks list of tasks to save
      */
     public void rewriteFile(ArrayList<Task> tasks) throws IOException {
@@ -75,9 +75,11 @@ public class TaskStorage {
 
     /**
      * Loads tasks from storage file.
-     * @return list of loaded tasks, empty if file doesn't exist
+     * @return List of loaded tasks
+     * @throws FileNotFoundException if storage file does not exist
+     * @throws AlterEgoException if file format is invalid
      */
-    public StorageData loadTasks() throws FileNotFoundException, AlterEgoException {
+    public ArrayList<Task> loadTasks() throws FileNotFoundException, AlterEgoException {
         ArrayList<Task> tasks = new ArrayList<>();
         File f = new File(filePath);
         Scanner s = new Scanner(f);
@@ -89,9 +91,10 @@ public class TaskStorage {
             Task task = parseFromFile(nextString);
             tasks.add(task);
         }
-        return new StorageData(tasks);
+        return tasks;
     }
 
+    //helper method to parse lines into task
     private Task parseFromFile(String line) throws AlterEgoException {
         String[] parts = line.split(" \\| ");
 
@@ -177,7 +180,7 @@ public class TaskStorage {
         return event;
     }
 
-
+    //assign contact to task, if applicable
     private void handleContact(Task task, String contactPart) throws AlterEgoException {
         String[] contactParts = contactPart.split("\\|");
         if (contactParts.length != 2) {

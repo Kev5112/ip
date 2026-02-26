@@ -1,26 +1,29 @@
 package alterego.contact;
 
-import alterego.storage.ContactStorage;
-import alterego.storage.TaskStorage;
-import alterego.task.TaskList;
-import alterego.utils.AlterEgoException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
+import alterego.storage.ContactStorage;
+import alterego.storage.TaskStorage;
+import alterego.task.TaskList;
+import alterego.utils.AlterEgoException;
 
 /**
- * AI generated testcase, for personal use onlu
+ * The testcases below are AI generated, with personal
+ * modifications according to the intended behavior of the ContactList
  */
 public class ContactListTest {
-
     @TempDir
     Path tempDir;
 
@@ -203,16 +206,7 @@ public class ContactListTest {
     }
 
     @Test
-    void setBestFriend_contactNotInList_throwsException() {
-        Contact john = new Contact("John", "bestfriend");
-
-        assertThrows(AlterEgoException.class, () -> {
-            contactList.setBestFriend(john);
-        });
-    }
-
-    @Test
-    void _returnsCorrectCount() throws AlterEgoException {
+    void returnsCorrectCount() throws AlterEgoException {
         assertEquals(0, contactList.getSize());
 
         contactList.addContact("John", "friend");

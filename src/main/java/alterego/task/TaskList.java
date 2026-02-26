@@ -23,10 +23,6 @@ public class TaskList {
     private Set<Task> taskSet;
     private TaskStorage taskStorage;
 
-    public String getLoadStatus() {
-        return loadStatus;
-    }
-
     /**
      * Creates TaskList with given tasks and storage.
      * @param taskStorage storage handler
@@ -34,7 +30,7 @@ public class TaskList {
     public TaskList(TaskStorage taskStorage) {
         assert taskStorage != null : "Storage cannot be null";
         try {
-            this.tasks = taskStorage.loadTasks().getTasks();
+            this.tasks = taskStorage.loadTasks();
             assert this.tasks != null : "loadTasks() method should not return null";
         } catch (FileNotFoundException e) {
             this.tasks = new ArrayList<Task>();
@@ -45,9 +41,16 @@ public class TaskList {
     }
 
     /**
+     * @return warning message if file is not found
+     */
+    public String getLoadStatus() {
+        return loadStatus;
+    }
+
+    /**
      * Adds a todo task to the list, then saves the task to storage.
-     * Prints out the confirmation
      * @param taskName description of the todo task
+     * @return Confirmation message
      */
     public String addToDo(String taskName) {
         assert taskName != null : "Task name cannot be null";
@@ -62,10 +65,11 @@ public class TaskList {
 
     /**
      * Adds a deadline task to the list. Requires description and date as arguments.
-     * Date should be a String with format yyyy-MM-dd.
-     * Saves the task to storage immediately and prints out the confirmation.
+     * Date should be a String with format dd-MM-yyyy
+     * Saves the task to storage immediately.
      * @param taskName description of the deadline task
-     * @param dateString deadline date in yyyy-MM-dd format
+     * @param dateString deadline date in dd-MM-yyyy format
+     * @return Confirmation message
      */
     public String addDeadline(String taskName, String dateString) {
         assert taskName != null : "Task name cannot be null";
@@ -78,11 +82,12 @@ public class TaskList {
 
     /**
      * Adds an event task to the list. Requires description startDate, and endDate as arguments.
-     * Date should be a String with format yyyy-MM-dd.
-     * Saves the task to storage immediately and prints out the confirmation.
+     * Date should be a String with format dd-MM-yyyy
+     * Saves the task to storage immediately.
      * @param taskName description of the event task
-     * @param fromDateString start date in yyyy-MM-dd format
-     * @param toDateString end date in yyyy-MM-dd format
+     * @param fromDateString start date in dd-MM-yyyy format
+     * @param toDateString end date in dd-MM-yyyy format
+     * @return Confirmation message with overlap warning if applicable
      */
     public String addEvent(String taskName, String fromDateString, String toDateString) {
         assert taskName != null : "Task name cannot be null";
@@ -103,7 +108,7 @@ public class TaskList {
     }
 
     /**
-     * Shows all tasks in a numbered list, or message if empty.
+     * @return Formatted string of all tasks in a numbered list or message if empty.
      */
     public String enumList() {
         if (tasks.isEmpty()) {
@@ -115,6 +120,11 @@ public class TaskList {
                 .collect(Collectors.joining()) + "\n";
     }
 
+    /**
+     * Finds and returns all tasks containing the keyword.
+     * @param keyword Search term
+     * @return Formatted string of all matching tasks or "No search result found"
+     */
     public String find(String keyword) {
         assert keyword != null : "null keyword should've been handled";
         if (tasks.isEmpty()) {
@@ -130,8 +140,9 @@ public class TaskList {
     }
 
     /**
-     * Marks a task as done, update changes in storage, then prints confirmation.
+     * Marks a task as done and update changes in storage.
      * @param taskNumber task number (1-based index)
+     * @return Confirmation message
      * @throws AlterEgoException if task number is invalid
      */
     public String mark(int taskNumber) throws AlterEgoException {
@@ -147,8 +158,9 @@ public class TaskList {
     }
 
     /**
-     * Marks a task as not done, update changes in storage, then prints confirmation.
+     * Marks a task as not done and update changes in storage.
      * @param taskNumber task number (1-based index)
+     * @return Confirmation message
      * @throws AlterEgoException if task number is invalid
      */
     public String unmark(int taskNumber) throws AlterEgoException {
@@ -164,8 +176,9 @@ public class TaskList {
     }
 
     /**
-     * Deletes a task, update changes in storage, then prints confirmation with updated count.
+     * Deletes a task and update changes in storage.
      * @param taskNumber task number (1-based index)
+     * @return Confirmation message
      * @throws AlterEgoException if task number is invalid
      */
     public String delete(int taskNumber) throws AlterEgoException {
@@ -180,6 +193,12 @@ public class TaskList {
         return ExceptionCatcher.catchIoException(() -> taskStorage.rewriteFile(tasks), successMessage);
     }
 
+    /**
+     * Assigns a contact to a task and updates storage.
+     * @param taskNumber 1-based task index
+     * @param contact Contact to assign
+     * @return Confirmation message
+     */
     public String assignTask(int taskNumber, Contact contact) {
         if (taskNumber > tasks.size()) {
             throw new AlterEgoException("There's only " + tasks.size() + " tasks here!");
@@ -190,6 +209,10 @@ public class TaskList {
         return ExceptionCatcher.catchIoException(() -> taskStorage.rewriteFile(tasks), message);
     }
 
+    /**
+     * Removes contact assignment from all tasks and updates storage.
+     * @param contact Contact to unassign
+     */
     public void unassignTask(Contact contact) {
         for (Task task : tasks) {
             if (contact.equals(task.getAssignedTo())) {
@@ -200,7 +223,8 @@ public class TaskList {
     }
 
     /**
-     * Clears all tasks, clears storage, and shows confirmation.
+     * Clears all tasks from list and storage
+     * @return Confirmation message
      */
     public String clear() {
         tasks = new ArrayList<Task>();
@@ -217,6 +241,11 @@ public class TaskList {
         return tasks.get(index);
     }
 
+    /**
+     * Checks for duplicate tasks by throwing exception if task is a duplicate.
+     * @param task Task to check
+     * @throws AlterEgoException if task already exists
+     */
     private void handleDuplicate(Task task) throws AlterEgoException {
         if (taskSet.contains(task)) {
             throw new AlterEgoException("Task already exists!");
@@ -224,6 +253,9 @@ public class TaskList {
         taskSet.add(task);
     }
 
+    /**
+     * Helper function for task adding
+     */
     private String addTask(Task newTask) {
         tasks.add(newTask);
         String message = "Got it. I've added this task:\n " + newTask
@@ -231,6 +263,9 @@ public class TaskList {
         return ExceptionCatcher.catchIoException(() -> taskStorage.addNewTask(newTask), message);
     }
 
+    /**
+     * Helper function for event overlap checking
+     */
     private boolean hasOverlap(LocalDate newFrom, LocalDate newTo) {
         long overlapCount = tasks.stream()
                 .filter(task -> task instanceof Event)
@@ -239,5 +274,4 @@ public class TaskList {
                 .count();
         return overlapCount > 0;
     }
-
 }

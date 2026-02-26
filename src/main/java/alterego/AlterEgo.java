@@ -41,6 +41,12 @@ public class AlterEgo {
     }
 
     public String getLoadStatus() {
-        return taskList.getLoadStatus();
+        String taskWarning = taskList.getLoadStatus();
+        String contactWarning = contactList.getLoadStatus();
+        if (taskWarning == null && contactWarning == null) {
+            return null;
+        }
+        return (taskWarning == null ? "" : taskWarning + "\n")
+                + (contactWarning == null ? "" : contactWarning);
     }
 }

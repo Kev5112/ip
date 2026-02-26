@@ -1,20 +1,25 @@
 package alterego.command;
 
-import alterego.contact.ContactList;
-import alterego.storage.ContactStorage;
-import alterego.storage.TaskStorage;
-import alterego.utils.AlterEgoException;
-import alterego.task.TaskList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.nio.file.Path;
-
-import static org.junit.jupiter.api.Assertions.*;
+import alterego.contact.ContactList;
+import alterego.storage.ContactStorage;
+import alterego.storage.TaskStorage;
+import alterego.task.TaskList;
+import alterego.utils.AlterEgoException;
 
 /**
- * AI generated testcases, not for grading. Personal use only
+ * The testcases below are AI generated, with personal
+ * modifications according to the intended behavior of the Parser
  */
 public class ParserTest {
     @TempDir
@@ -56,7 +61,7 @@ public class ParserTest {
     }
 
     @Test
-    void execute_todoCommand_validInput_addsTodo() throws AlterEgoException {
+    void execute_todoCommand_addsTodo() throws AlterEgoException {
         String result = parser.execute("todo Read book");
         assertTrue(result.contains("Read book"));
 
@@ -65,14 +70,14 @@ public class ParserTest {
     }
 
     @Test
-    void execute_todoCommand_missingDescription_throwsException() {
+    void execute_todoCommand_missingDescription() {
         assertThrows(AlterEgoException.class, () -> {
             parser.execute("todo");
         });
     }
 
     @Test
-    void execute_deadlineCommand_validInput_addsDeadline() throws AlterEgoException {
+    void execute_deadlineCommand_addsDeadline() throws AlterEgoException {
         String result = parser.execute("deadline Return book /by 01-12-2024");
         assertTrue(result.contains("Return book"));
 
@@ -82,14 +87,14 @@ public class ParserTest {
     }
 
     @Test
-    void execute_deadlineCommand_missingBy_throwsException() {
+    void execute_deadlineCommand_missingBy() {
         assertThrows(AlterEgoException.class, () -> {
             parser.execute("deadline Return book");
         });
     }
 
     @Test
-    void execute_eventCommand_validInput_addsEvent() throws AlterEgoException {
+    void execute_eventCommand_addsEvent() throws AlterEgoException {
         String result = parser.execute("event Conference /from 01-12-2024 /to 03-12-2024");
         assertTrue(result.contains("Conference"));
 
@@ -100,7 +105,7 @@ public class ParserTest {
     }
 
     @Test
-    void execute_eventCommand_validInput_overlappingEvent() throws AlterEgoException {
+    void execute_eventCommand_overlappingEvent() throws AlterEgoException {
         parser.execute("event Conference /from 01-12-2024 /to 03-12-2024");
         String result = parser.execute("event Conference /from 01-12-2025 /to 03-12-2025");
         assertFalse(result.contains("Overlapping"));
@@ -109,14 +114,14 @@ public class ParserTest {
     }
 
     @Test
-    void execute_eventCommand_missingFrom_throwsException() {
+    void execute_eventCommand_missingFrom() {
         assertThrows(AlterEgoException.class, () -> {
             parser.execute("event Conference /to 2024-12-03");
         });
     }
 
     @Test
-    void execute_markCommand_validInput_marksTask() throws AlterEgoException {
+    void execute_markCommand_marksTask() throws AlterEgoException {
         parser.execute("todo Read book");
         String result = parser.execute("mark 1");
         assertTrue(result.contains("marked this task as done"));
@@ -126,7 +131,7 @@ public class ParserTest {
     }
 
     @Test
-    void execute_markCommand_invalidNumber_throwsException() {
+    void execute_markCommand_invalidNumber() {
         parser.execute("todo Read book");
         assertThrows(AlterEgoException.class, () -> {
             parser.execute("mark 2");
@@ -134,7 +139,7 @@ public class ParserTest {
     }
 
     @Test
-    void execute_unmarkCommand_validInput_unmarksTask() throws AlterEgoException {
+    void execute_unmarkCommand_unmarksTask() throws AlterEgoException {
         parser.execute("todo Read book");
         parser.execute("mark 1");
         String result = parser.execute("unmark 1");
@@ -145,7 +150,7 @@ public class ParserTest {
     }
 
     @Test
-    void execute_deleteCommand_validInput_deletesTask() throws AlterEgoException {
+    void execute_deleteCommand_deletesTask() throws AlterEgoException {
         parser.execute("todo Read book");
         parser.execute("todo Write code");
 
@@ -158,7 +163,7 @@ public class ParserTest {
     }
 
     @Test
-    void execute_findCommand_matchingKeyword_returnsMatches() throws AlterEgoException {
+    void execute_findCommand_matchingKeyword() throws AlterEgoException {
         parser.execute("todo Read book");
         parser.execute("todo Buy book");
         parser.execute("todo Write code");
@@ -170,7 +175,7 @@ public class ParserTest {
     }
 
     @Test
-    void execute_findCommand_noMatches_returnsNoResultMessage() throws AlterEgoException {
+    void execute_findCommand_noMatches() throws AlterEgoException {
         parser.execute("todo Read book");
         String result = parser.execute("find xyz");
         assertEquals("No search result found.", result);
@@ -198,7 +203,7 @@ public class ParserTest {
     // ==================== CONTACT COMMAND TESTS ====================
 
     @Test
-    void execute_contactCommand_validInput_addsContact() throws AlterEgoException {
+    void execute_contactCommand_addsContact() throws AlterEgoException {
         String result = parser.execute("contact John /as friend");
         assertTrue(result.contains("Added contact: John"));
         assertTrue(result.contains("friend"));
@@ -209,28 +214,28 @@ public class ParserTest {
     }
 
     @Test
-    void execute_contactCommand_missingAs_throwsException() {
+    void execute_contactCommand_missingAs() {
         assertThrows(AlterEgoException.class, () -> {
             parser.execute("contact John friend");
         });
     }
 
     @Test
-    void execute_contactCommand_emptyName_throwsException() {
+    void execute_contactCommand_emptyName() {
         assertThrows(AlterEgoException.class, () -> {
             parser.execute("contact  /as friend");
         });
     }
 
     @Test
-    void execute_contactCommand_emptyRelationship_throwsException() {
+    void execute_contactCommand_emptyRelationship() {
         assertThrows(AlterEgoException.class, () -> {
             parser.execute("contact John /as ");
         });
     }
 
     @Test
-    void execute_contactCommand_duplicateContact_throwsException() throws AlterEgoException {
+    void execute_contactCommand_duplicateContact() throws AlterEgoException {
         parser.execute("contact John /as friend");
         assertThrows(AlterEgoException.class, () -> {
             parser.execute("contact John /as colleague");
@@ -238,13 +243,13 @@ public class ParserTest {
     }
 
     @Test
-    void execute_contactlistCommand_emptyList_returnsNoContactsMessage() throws AlterEgoException {
+    void execute_contactlistCommand_emptyList() throws AlterEgoException {
         String result = parser.execute("contactlist");
         assertTrue(result.contains("no friends") || result.contains("no contacts"));
     }
 
     @Test
-    void execute_contactlistCommand_withContacts_returnsContactList() throws AlterEgoException {
+    void execute_contactlistCommand_withContacts() throws AlterEgoException {
         parser.execute("contact John /as friend");
         parser.execute("contact Mary /as colleague");
 
@@ -258,7 +263,7 @@ public class ParserTest {
     // ==================== ASSIGN COMMAND TESTS ====================
 
     @Test
-    void execute_assignCommand_validInput_assignsTask() throws AlterEgoException {
+    void execute_assignCommand_assignsTask() throws AlterEgoException {
         parser.execute("contact John /as friend");
         parser.execute("todo Read book");
 
@@ -271,7 +276,7 @@ public class ParserTest {
     }
 
     @Test
-    void execute_assignCommand_missingTo_throwsException() {
+    void execute_assignCommand_missingTo() {
         parser.execute("contact John /as friend");
         parser.execute("todo Read book");
 
@@ -281,7 +286,7 @@ public class ParserTest {
     }
 
     @Test
-    void execute_assignCommand_contactNotFound_throwsException() throws AlterEgoException {
+    void execute_assignCommand_contactNotFound() throws AlterEgoException {
         parser.execute("todo Read book");
 
         assertThrows(AlterEgoException.class, () -> {
@@ -290,7 +295,7 @@ public class ParserTest {
     }
 
     @Test
-    void execute_assignCommand_invalidTaskNumber_throwsException() throws AlterEgoException {
+    void execute_assignCommand_invalidTaskNumber() throws AlterEgoException {
         parser.execute("contact John /as friend");
 
         assertThrows(AlterEgoException.class, () -> {
@@ -299,7 +304,7 @@ public class ParserTest {
     }
 
     @Test
-    void execute_assignCommand_taskNumberWithExtraText_throwsException() throws AlterEgoException {
+    void execute_assignCommand_taskNumberWithExtraText() throws AlterEgoException {
         parser.execute("contact John /as friend");
         parser.execute("todo Read book");
 
@@ -311,7 +316,7 @@ public class ParserTest {
     // ==================== DELETE COMMAND WITH CONTACTS ====================
 
     @Test
-    void execute_deleteCommand_deleteContact_unassignsFromTasks() throws AlterEgoException {
+    void execute_deleteCommand_deleteContact() throws AlterEgoException {
         parser.execute("contact John /as friend");
         parser.execute("todo Read book");
         parser.execute("assign 1 /to John");
@@ -331,7 +336,7 @@ public class ParserTest {
     }
 
     @Test
-    void execute_deleteCommand_deleteContact_updatesContactList() throws AlterEgoException {
+    void execute_deleteCommand_updatesContactList() throws AlterEgoException {
         parser.execute("contact John /as friend");
         parser.execute("contact Mary /as colleague");
 
@@ -346,14 +351,14 @@ public class ParserTest {
     }
 
     @Test
-    void execute_deleteCommand_invalidContactNumber_throwsException() {
+    void execute_deleteCommand_invalidContactNumber() {
         assertThrows(AlterEgoException.class, () -> {
             parser.execute("delete c99");
         });
     }
 
     @Test
-    void execute_deleteCommand_missingPrefix_throwsException() {
+    void execute_deleteCommand_missingPrefix() {
         assertThrows(AlterEgoException.class, () -> {
             parser.execute("delete 1");
         });

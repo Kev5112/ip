@@ -11,7 +11,6 @@
 ## Week 2:
 ### What I Used AI For:
 - Learn java string operations
-- - Used AI applications: deepseek, google search Gemini
 
 ## Week 3:
 ### What I Used AI For:
@@ -21,33 +20,33 @@
 - Generate template for javadocs
 - Find possible coding standard violations
 - Additional string operation
-## Summary:
+### Summary:
 - Total time saved estimate: 2-3 hours?
-- Used AI applications: deepseek, google search Gemini
 - Remark: Shortening reading time and making tedious work easier
 
 ## Week 4:
 ### What I Used AI For:
 - Generating GFMD template
 - Help with supplementary understanding to the javafx tutorial
-## Summary:
-- Total time saved estimate: -
-- Used AI applications: deepseek
-- Remark: Helps with understanding
 
 ## Week 5:
 ### What I Used AI For:
 - Adding additional assertion that I missed
 - Code quality review and improvement
 - Giving clue for stream operation
-- Assistance in adding contacts feature (tedious repeated code with similar logic to task,
+- Assistance in adding contacts feature (tedious code with similar logic to task operation,
   tedious string generation, fixing bugs that arise from the addition of contact)
 - Generating testcases for personal use (ensuring the new feature isn't buggy)
-## Summary:
-- Total time saved estimate: 30 mins (excluding contacts), 5-6 hours (including contacts and testcases)
-- Used AI applications: deepseek, chatGPT
+### Summary:
+- Total time saved estimate: probably 6 hours worth of testcases
 - Remark: Saves a lot of time in adding contacts and tedious debugging
+
+## Week 6:
+### What I Used AI For:
+- Help with this AI.md
+- Final bug findings
+- Finalize javadoc headers
+- Help with readme
 
 ## Overall Summary
 - Total time saved estimate: 10 hours
-- Most used AI applications: deepseek

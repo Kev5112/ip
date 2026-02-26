@@ -1,24 +1,30 @@
 package alterego.storage;
 
-import alterego.contact.Contact;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.nio.file.Path;
-import java.util.ArrayList;
+import alterego.contact.Contact;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * AI generated testcases, not for grading. Personal use only
+ * The testcases below are AI generated, with personal
+ * modifications according to the intended behavior of ContactStorage
  */
 public class ContactStorageTest {
-
     @TempDir
     Path tempDir;
 

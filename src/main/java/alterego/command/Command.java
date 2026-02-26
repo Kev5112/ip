@@ -19,10 +19,18 @@ public enum Command {
     ASSIGN,
     BYE;
 
+    /**
+     * Returns the length of the command string.
+     * @return Length of the command name in characters
+     */
     public int getStrLen() {
         return this.toString().length();
     }
 
+    /**
+     * Returns the lowercase string representation of the command.
+     * @return Command name in lowercase
+     */
     @Override
     public String toString() {
         return this.name().toLowerCase();

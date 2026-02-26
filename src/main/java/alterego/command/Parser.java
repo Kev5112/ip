@@ -2,23 +2,35 @@ package alterego.command;
 
 import alterego.contact.Contact;
 import alterego.contact.ContactList;
-import alterego.utils.AlterEgoException;
 import alterego.task.TaskList;
 import alterego.ui.Ui;
+import alterego.utils.AlterEgoException;
 
 /**
- * Parses and executes user commands.
+ * Parses user's input and executes user commands.
  */
 public class Parser {
     private TaskList taskList;
     private ContactList contactList;
 
+    /**
+     * Creates a Parser with the given task and contact lists.
+     * @param taskList Task list for task operations
+     * @param contactList Contact list for contact operations
+     */
     public Parser(TaskList taskList, ContactList contactList) {
         assert taskList != null : "TaskList is null. Should've been handled in TaskList class";
         this.taskList = taskList;
         this.contactList = contactList;
     }
 
+    /**
+     * Executes the user input command and returns the response.
+     * Extract command -> check validity -> execute the command.
+     * @param input Raw user input string
+     * @return Response message from the executed command
+     * @throws AlterEgoException if command is invalid or execution fails
+     */
     public String execute(String input) throws AlterEgoException {
         if (input.isBlank()) {
             return "";
@@ -29,6 +41,9 @@ public class Parser {
         return executeCommand(input, command);
     }
 
+    /**
+     * Extracts the command type from user input.
+     */
     private Command commandExtractor(String input) throws AlterEgoException {
         if (input.equals("bye")) {
             return Command.BYE;
@@ -75,13 +90,16 @@ public class Parser {
         throw new AlterEgoException("I don't understand that. Use 'help' to get the list of commands.");
     }
 
+    /**
+     * Check validity for the input
+     */
     private void checkValidity(String input, Command command) throws AlterEgoException {
         assert command != null : "command should not be null by now";
 
         //no need arguments
-        if (command == Command.LIST || command == Command.BYE ||
-                command == Command.CLEAR || command == Command.HELP ||
-                command == Command.CONTACTLIST) {
+        if (command == Command.LIST || command == Command.BYE
+                || command == Command.CLEAR || command == Command.HELP
+                || command == Command.CONTACTLIST) {
             return;
         }
 
@@ -100,6 +118,7 @@ public class Parser {
         }
     }
 
+    // helper function
     private void validateIndex(String input, Command command, int offset) throws AlterEgoException {
         String numString = extractIndexString(input, command, offset);
         try {
@@ -125,12 +144,16 @@ public class Parser {
         }
     }
 
+    // helper function
     private String extractIndexString(String input, Command command, int offset) throws AlterEgoException {
         String numString = input.substring(command.getStrLen() + 1 + offset).trim();
         String[] parts = numString.split(" ");
         return parts[0];
     }
 
+    /**
+     * Executes command
+     */
     private String executeCommand(String input, Command command) throws AlterEgoException {
         switch (command) {
         case BYE:
@@ -167,40 +190,36 @@ public class Parser {
         }
     }
 
+    // helper function
     private String handleContact(String input) throws AlterEgoException {
         int slashIndex = input.indexOf("/as");
         if (slashIndex == -1) {
-            throw new AlterEgoException("Invalid format. Use: add-contact NAME /as RELATIONSHIP");
+            throw new AlterEgoException("Invalid format. Proper format: contact {name} /as {relationship}");
         }
         String name = input.substring(Command.CONTACT.getStrLen(), slashIndex).trim();
         String relationship = input.substring(slashIndex + "/as".length()).trim();
         if (name.isEmpty() || relationship.isEmpty()) {
             throw new AlterEgoException("Name and relationship cannot be empty.");
         }
-        contactList.addContact(name, relationship);
-        return "Added contact: " + name + " (" + relationship + ")";
+        return contactList.addContact(name, relationship);
     }
 
+    // helper function
     private String handleAssign(String input) throws AlterEgoException {
         int toIndex = input.indexOf("/to");
         if (toIndex == -1) {
-            throw new AlterEgoException("Invalid format. Use: assign TASK_NUMBER /to CONTACT_NAME");
+            throw new AlterEgoException("Invalid format. Proper format: assign {tasknumber} /to {name}");
         }
-        String taskNumStr = input.substring(Command.ASSIGN.getStrLen(), toIndex).trim();
+        String taskNumString = input.substring(Command.ASSIGN.getStrLen(), toIndex).trim();
         String contactName = input.substring(toIndex + "/to".length()).trim();
 
         try {
-            int taskNum = Integer.parseInt(taskNumStr);
+            int taskNum = Integer.parseInt(taskNumString);
             Contact contact = contactList.findContact(contactName);
-
-            if (contact == null) {
-                throw new AlterEgoException("Contact '" + contactName + "' not found.");
-            }
-
             return taskList.assignTask(taskNum, contact);
 
         } catch (NumberFormatException e) {
-            throw new AlterEgoException("Invalid task number: " + taskNumStr);
+            throw new AlterEgoException("Invalid task number: " + taskNumString);
         }
     }
 
@@ -226,10 +245,6 @@ public class Parser {
 
         String taskName = input.substring(Command.DEADLINE.getStrLen(), byIndex).trim();
         String dateString = input.substring(byIndex + "/by".length()).trim();
-
-        assert taskName != null : "Task name should not be null";
-        assert dateString != null : "Date string should not be null";
-
         return taskList.addDeadline(taskName, dateString);
     }
 
@@ -247,11 +262,6 @@ public class Parser {
         String taskName = input.substring(Command.EVENT.getStrLen(), fromIndex).trim();
         String fromDate = input.substring(fromIndex + "/from".length(), toIndex).trim();
         String toDate = input.substring(toIndex + "/to".length()).trim();
-
-        assert taskName != null : "Task name should not be null";
-        assert fromDate != null : "From date should not be null";
-        assert toDate != null : "To date should not be null";
-
         return taskList.addEvent(taskName, fromDate, toDate);
     }
 

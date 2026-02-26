@@ -26,17 +26,26 @@ public class Event extends Task {
         this.toDate = toDate;
     }
 
+    /**
+     * Returns the start date of this event.
+     * @return Start date
+     */
     public LocalDate getFromDate() {
         return fromDate;
     }
 
+    /**
+     * Returns the end date of this event.
+     * @return End date
+     */
     public LocalDate getToDate() {
         return toDate;
     }
 
     /**
      * Converts event to format for file storage.
-     * Format: "E | 1/0 | description | fromDate -> toDate"
+     * Format: E | 1/0 | description | fromDate -> toDate
+     * Format: E | 1/0 | description | fromDate -> toDate | assignedName|assignedRelationship
      * @return formatted string for saving to file
      */
     @Override
@@ -56,10 +65,9 @@ public class Event extends Task {
 
     /**
      * Returns string representation for display.
-     * Format: "[E][X/""] description (from: MMM d yyyy to: MMM d yyyy)"
+     * Format: [E][X/""] description [-> contact] (from: MMM d yyyy to: MMM d yyyy)
      * @return formatted display string
      */
-
     @Override
     public String toString() {
         return this.stringType + super.getCheckbox() + " "
@@ -68,7 +76,7 @@ public class Event extends Task {
     }
 
     /**
-     * Compares this event with another object for equality.
+     * Compares the equality of this and other object
      * Two events are equal if they have same description, done status, and dates.
      * @param obj object to compare with
      * @return true if objects are equal

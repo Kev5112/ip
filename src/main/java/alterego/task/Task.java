@@ -25,10 +25,18 @@ public abstract class Task {
         this.assignedTo = null;
     }
 
+    /**
+     * Assigns a contact to this task.
+     * @param contact Contact to assign
+     */
     public void assignTo(Contact contact) {
         this.assignedTo = contact;
     }
 
+    /**
+     * Returns the contact assigned to this task.
+     * @return Assigned contact, or null if unassigned
+     */
     public Contact getAssignedTo() {
         return assignedTo;
     }
@@ -55,6 +63,10 @@ public abstract class Task {
         return this.isDone;
     }
 
+    /**
+     * Returns the checkbox representation of task status.
+     * @return "[X]" if done, "[ ]" if not done
+     */
     protected String getCheckbox() {
         return this.isDone() ? "[X]" : "[ ]";
     }
@@ -66,8 +78,9 @@ public abstract class Task {
     public abstract String toFileFormat();
 
     /**
-     * Gets task description.
-     * @return task name
+     * Returns task name with its assigned contact.
+     * Format: description [-> contact]
+     * @return String representation
      */
     @Override
     public String toString() {
@@ -75,12 +88,16 @@ public abstract class Task {
         return taskName + assignment;
     }
 
+    /**
+     * Returns the task name.
+     * @return Task name
+     */
     public String getTaskName() {
         return taskName;
     }
 
     /**
-     * Compares this task with another object for equality.
+     * Compares the equality of this with another object
      * Two tasks are equal if they have same description and done status.
      * @param obj object to compare with
      * @return true if tasks are equal

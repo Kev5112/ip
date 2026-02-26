@@ -25,7 +25,8 @@ public class Deadline extends Task {
 
     /**
      * Converts deadline to format for file storage.
-     * Format: "D | 1/0 | description | date"
+     * Format: D | 1/0 | description | date
+     * Format: D | 1/0 | description | date | assignedName|assignedRelationship
      * @return formatted string for saving to file
      */
     @Override
@@ -44,7 +45,7 @@ public class Deadline extends Task {
 
     /**
      * Returns string representation for display.
-     * Format: "[D][X/""] description (by: MMM d yyyy)"
+     * Format: [D][X] description [→ contact] (by: MMM d yyyy)
      * @return formatted display string
      */
     @Override
@@ -54,7 +55,7 @@ public class Deadline extends Task {
     }
 
     /**
-     * Compares this deadline with another object for equality.
+     * Compares the equality of this and other object
      * Two deadlines are equal if they have same description, done status, and date.
      * @param obj object to compare with
      * @return true if objects are equal
