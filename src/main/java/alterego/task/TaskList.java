@@ -34,7 +34,7 @@ public class TaskList {
             assert this.tasks != null : "loadTasks() method should not return null";
         } catch (FileNotFoundException e) {
             this.tasks = new ArrayList<Task>();
-            loadStatus = "Warning: File not found. Creating a new list.";
+            loadStatus = "Warning: Task data not found. Creating a new list.";
         }
         this.taskStorage = taskStorage;
         this.taskSet = new HashSet<>(tasks);

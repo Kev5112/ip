@@ -39,7 +39,7 @@ public class ContactList {
             this.contacts = new ArrayList<>();
             this.contactSet = new HashSet<>();
             this.tasks = taskList;
-            loadStatus = "Warning: File not found. Creating a new list.";
+            loadStatus = "Warning: Contact data not found. Creating a new list.";
         }
     }
 
