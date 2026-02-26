@@ -11,15 +11,15 @@ AlterEgo is a **desktop chatbot app** for managing tasks and contacts, optimized
 ### 📋 Task Management
 
 #### Add task:
-- **Todo**: todo {description}
+- **Todo**: `todo {description}`
     - Example: `todo read book`
-- **Deadline**: {description} /by {date, dd-MM-yyyy format}
+- **Deadline**: `{description} /by {date, dd-MM-yyyy format}`
     - Example: `deadline return book /by 25-03-2024`
-- **Event**: {description} /from {date, dd-MM-yyyy format} /to {date, dd-MM-yyyy format}
+- **Event**: `{description} /from {date, dd-MM-yyyy format} /to {date, dd-MM-yyyy format}`
     - Example: `event camp /from 01-04-2024 /to 05-04-2024`
     - ⚠️ Note: Overlapping events will trigger a warning
 #### Delete task:
-- delete t{index}
+- `delete t{index}`
     - Example: `delete t1`
 #### Update task doneness:
 - **Mark as done**: `mark {index}`
@@ -61,17 +61,10 @@ AlterEgo is a **desktop chatbot app** for managing tasks and contacts, optimized
 - `bye`
     - Example: `bye`
 
-// A description of the expected outcome goes here
+## Expected outcome
 
 ```
-expected output
+Got it. I've added this task:
+ [T][ ] read book
+Now you have 1 tasks in the list.
 ```
-
-## Feature ABC
-
-// Feature details
-
-
-## Feature XYZ
-
-// Feature details
