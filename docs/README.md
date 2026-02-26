@@ -1,11 +1,9 @@
 # AlterEgo User Guide
 
-// Product screenshot goes here
 ![Product Screenshot](Ui.png)
 
 AlterEgo is a **desktop chatbot app** for managing tasks and contacts, optimized for use via a **Command Line Interface (CLI)** while having the benefits of a **Graphical User Interface (GUI)**.
 
-// Product intro goes here
 ## Features
 
 ### 📋 Task Management
