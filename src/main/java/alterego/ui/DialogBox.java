@@ -4,12 +4,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -32,6 +36,7 @@ public class DialogBox extends HBox {
 
         dialog.setText(s);
         displayPicture.setImage(i);
+        dialog.setFont(Font.font("Monospaced", javafx.scene.text.FontWeight.BOLD, 13));
     }
 
     private void flip() {
@@ -39,10 +44,16 @@ public class DialogBox extends HBox {
         Collections.reverse(tmp);
         getChildren().setAll(tmp);
         setAlignment(Pos.TOP_LEFT);
+        this.setSpacing(20);
+        dialog.setStyle("-fx-background-color: #E0E0E0; -fx-background-radius: 15; -fx-padding: 10");
     }
 
     public static DialogBox getUserDialog(String s, Image i) {
-        return new DialogBox(s, i);
+        var db = new DialogBox(s, i);
+        db.setAlignment(Pos.TOP_RIGHT);
+        db.setSpacing(20);
+        db.dialog.setStyle("-fx-background-color: #E0E0E0; -fx-background-radius: 15; -fx-padding: 10;");
+        return db;
     }
 
     public static DialogBox getAlterEgoDialog(String s, Image i) {

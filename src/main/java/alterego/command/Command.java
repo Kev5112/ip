@@ -4,18 +4,18 @@ package alterego.command;
  * Enumeration of all available commands in AlterEgo.
  */
 public enum Command {
-    LIST,
-    CLEAR,
-    HELP,
-    FIND,
-    DELETE,
-    MARK,
-    UNMARK,
     TODO,
     DEADLINE,
     EVENT,
     CONTACT,
+    LIST,
     CONTACTLIST,
+    DELETE,
+    FIND,
+    CLEAR,
+    HELP,
+    MARK,
+    UNMARK,
     ASSIGN,
     BYE;
 

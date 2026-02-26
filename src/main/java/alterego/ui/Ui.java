@@ -8,7 +8,7 @@ import alterego.command.Command;
  * User interface handler for AlterEgo chatbot.
  */
 public class Ui {
-    public static final String LINE = "———————————————————————————————————————\n";
+    public static final String LINE = "";
 
     /**
      * Shows welcome message.
@@ -16,7 +16,8 @@ public class Ui {
      * @return
      */
     public static String hello() {
-        return "Hello! I'm Alter Ego\nWhat can I do for you?\n";
+        return "Hello, I'm Alter Ego!\n\nWhat can I do for you?\n\n"
+                + "Note: Type 'help' to get started";
     }
 
     /**
@@ -30,9 +31,20 @@ public class Ui {
      * Shows all available commands.
      */
     public static String help() {
-        String accum = "";
+        String accum = "Task adding: \n";
+        int j = 0;
         for (Command command : Command.values()) {
             accum = accum + command.toString().toLowerCase() + "\n";
+            j++;
+            if (j == 3) {
+                accum = accum + "\nContact adding: \n";
+            }
+            if (j == 4) {
+                accum = accum + "\nView: \n";
+            }
+            if (j == 6) {
+                accum = accum + "\nOther commands: \n";
+            }
         }
         return accum;
     }

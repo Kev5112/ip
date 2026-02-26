@@ -6,6 +6,7 @@ import alterego.utils.AlterEgoException;
 import alterego.utils.ExceptionCatcher;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,6 +38,12 @@ public class ContactList {
 
     public String getLoadStatus() {
         return loadStatus;
+    }
+
+    public void clear() {
+        contacts = new ArrayList<>();
+        contactSet = new HashSet<>();
+        ExceptionCatcher.catchIoException(contactStorage::clear, "");
     }
 
     public void setBestFriend(Contact contact) {

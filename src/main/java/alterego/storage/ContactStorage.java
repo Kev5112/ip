@@ -17,6 +17,12 @@ public class ContactStorage {
         this.filePath = path;
     }
 
+    public void clear() throws IOException {
+        FileWriter fw = new FileWriter(filePath);
+        fw.write("");
+        fw.close();
+    }
+
     public void rewriteFile(ArrayList<Contact> contacts) throws IOException {
         FileWriter fw = new FileWriter(filePath);
         for (Contact contact : contacts) {

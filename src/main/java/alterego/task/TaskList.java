@@ -205,7 +205,7 @@ public class TaskList {
     public String clear() {
         tasks = new ArrayList<Task>();
         taskSet = new HashSet<>();
-        String successMessage = "Cleared data from storage. You have 0 task now.";
+        String successMessage = "Cleared data from storage. You have 0 task and contact now.";
         return ExceptionCatcher.catchIoException(taskStorage::clear, successMessage);
     }
 

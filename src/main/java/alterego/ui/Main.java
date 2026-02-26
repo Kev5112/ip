@@ -18,11 +18,11 @@ public class Main extends Application {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
             AnchorPane ap = fxmlLoader.load();
-            Scene scene = new Scene(ap);
+            Scene scene = new Scene(ap, 800, 600);
             stage.setScene(scene);
-            stage.setMinHeight(220);
-            stage.setMinWidth(417);
-            stage.setMaxWidth(517);
+            stage.setTitle("AlterEgo");
+            stage.setMinHeight(400);
+            stage.setMinWidth(600);
             MainWindow controller = fxmlLoader.getController();
             controller.setAlterEgo(alterEgo);
             controller.setStage(stage);

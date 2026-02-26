@@ -136,6 +136,7 @@ public class Parser {
         case BYE:
             return Ui.bye();
         case CLEAR:
+            contactList.clear();
             return taskList.clear();
         case LIST:
             return taskList.enumList();
@@ -257,21 +258,22 @@ public class Parser {
     private String getMissingArgumentMessage(Command command) {
         switch (command) {
         case FIND:
-            return "Find what?";
+            return "Use find command to search a task with keyword in the task list. Use: find {keyword}";
         case DELETE:
-            return "Delete what?";
+            return "Use delete command to delete an object in the task list/contact list. Use: delete {t/c}{index}\n"
+                    + "e.g. delete t1";
         case MARK:
-            return "Mark what?";
+            return "Use mark command to mark a task in the list as done. Use: mark {index}";
         case UNMARK:
-            return "Unmark what?";
+            return "Use ummark command to mark a task in the list as not done. Use: unmark {index}";
         case TODO:
         case DEADLINE:
         case EVENT:
-            return "Error: you didn't input the description??";
+            return "Error: please input the task description";
         case CONTACT:
-            return "Name and relationship?";
+            return "Use contact command to add a contact. Use: contact {name} /as {relationship}";
         case ASSIGN:
-            return "Assign what?";
+            return "Use assign command to assign a task to a contact. Use: assign {tasknumber} /to {contactname}";
         default:
             throw new AssertionError("Should not reach here, missingArgumentMessage");
         }
