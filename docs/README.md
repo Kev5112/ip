@@ -4,11 +4,11 @@
 
 AlterEgo is a **desktop chatbot app** for managing tasks and contacts, optimized for use via a **Command Line Interface (CLI)** while having the benefits of a **Graphical User Interface (GUI)**.
 
-## Features
+# Features
 
-### 📋 Task Management
+### 1. 📋 Task Management
 
-#### Add task:
+#### a. Add task:
 - **Todo**: `todo {description}`
     - Example: `todo read book`
 - **Deadline**: `{description} /by {date, dd-MM-yyyy format}`
@@ -17,53 +17,53 @@ AlterEgo is a **desktop chatbot app** for managing tasks and contacts, optimized
     - Example: `event camp /from 01-04-2024 /to 05-04-2024`
     - ⚠️ Note: Overlapping events will trigger a warning
 
-#### Delete task:
+#### b. Delete task:
 - `delete t{index}`
     - Example: `delete t1`
 
-#### Update task doneness:
+#### c. Update task doneness:
 - **Mark as done**: `mark {index}`
     - Example: `mark 1`
 - **Mark as not done**: `unmark {index}`
     - Example: `unmark 1`
 
-#### Find task:
+#### d. Find task:
 - `find {keyword}`
     - Keyword can be any part of the task label, including date
     - Example: `find book`, `find 25-03`
-#### View all task:
+#### e. View all task:
 - `list`
 
-### 👥 Contact Management
+### 2. 👥 Contact Management
 
-#### Add contact:
+#### a. Add contact:
 - `contact {name} /as {relationship}`
     - Example: `contact John /as Friend`
 
-#### Delete contact:
+#### b. Delete contact:
 - `delete c{index}`
     - Example: `delete c1`
 
-#### Assign contact for a task:
+#### c. Assign contact for a task:
 - `assign {index} /to {name}`
     - Example: `assign 1 /to John`
 
-#### View all contacts:
+#### d. View all contacts:
 - `contactlist`
     - Example: `contactlist`
 
-### 🛠️ Miscellaneous
+### 3. 🛠️ Miscellaneous
 
-#### Show all commands:
+#### a. Show all commands:
 - `help`
     - Example: `help`
 
-#### Clear all data:
+#### b. Clear all data:
 - `clear`
     - ⚠️ Warning: This permanently deletes all tasks and contacts from storage
     - Example: `clear`
 
-#### Exit application:
+#### c. Exit application:
 - `bye`
     - Example: `bye`
 
