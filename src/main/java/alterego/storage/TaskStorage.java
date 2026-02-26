@@ -32,9 +32,26 @@ public class TaskStorage {
     }
 
     /**
+     * Ensures the parent directory exists before file operations.
+     * Creates directories if they don't exist.
+     * AI generated last minute bug fixes.
+     * @throws IOException if directories cannot be created
+     */
+    private void ensureDirectoryExists() throws IOException {
+        File file = new File(filePath);
+        File parentDir = file.getParentFile();
+        if (parentDir != null && !parentDir.exists()) {
+            if (!parentDir.mkdirs()) {
+                throw new IOException("Failed to create directory: " + parentDir.getPath());
+            }
+        }
+    }
+
+    /**
      * Clears all tasks from storage file.
      */
     public void clear() throws IOException {
+        ensureDirectoryExists();
         FileWriter fw = new FileWriter(filePath);
         fw.write("");
         fw.close();
@@ -46,6 +63,7 @@ public class TaskStorage {
      */
     public void rewriteFile(ArrayList<Task> tasks) throws IOException {
         assert tasks != null : "List of tasks cannot be null";
+        ensureDirectoryExists();
         FileWriter fw = new FileWriter(filePath);
         for (Task task : tasks) {
             assert task != null : "Task in list should not be null";
@@ -65,6 +83,7 @@ public class TaskStorage {
      */
     public void addNewTask(Task task) throws IOException {
         assert task != null : "Task to add cannot be null";
+        ensureDirectoryExists();
         FileWriter fw = new FileWriter(filePath, true);
         fw.write(task.toFileFormat() + System.lineSeparator());
         fw.close();

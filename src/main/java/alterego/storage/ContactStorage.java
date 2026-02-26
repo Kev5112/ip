@@ -25,10 +25,27 @@ public class ContactStorage {
     }
 
     /**
+     * Ensures the parent directory exists before file operations.
+     * Creates directories if they don't exist.
+     * AI generated last minute bug fixes.
+     * @throws IOException if directories cannot be created
+     */
+    private void ensureDirectoryExists() throws IOException {
+        File file = new File(filePath);
+        File parentDir = file.getParentFile();
+        if (parentDir != null && !parentDir.exists()) {
+            if (!parentDir.mkdirs()) {
+                throw new IOException("Failed to create directory: " + parentDir.getPath());
+            }
+        }
+    }
+
+    /**
      * Clears all contacts from storage file.
      * @throws IOException if file write operation fails
      */
     public void clear() throws IOException {
+        ensureDirectoryExists();
         FileWriter fw = new FileWriter(filePath);
         fw.write("");
         fw.close();
@@ -41,6 +58,7 @@ public class ContactStorage {
      * @throws IOException if file write operation fails
      */
     public void rewriteFile(ArrayList<Contact> contacts) throws IOException {
+        ensureDirectoryExists();
         FileWriter fw = new FileWriter(filePath);
         for (Contact contact : contacts) {
             fw.write(contact.getName() + "|" + contact.getRelationship() + System.lineSeparator());
