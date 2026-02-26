@@ -1,5 +1,7 @@
 package alterego.task;
 
+import alterego.utils.DateUtils;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -28,8 +30,16 @@ public class Deadline extends Task {
      */
     @Override
     public String toFileFormat() {
-        return "D | " + (super.isDone() ? "1" : "0") + " | " + super.toString()
-                + " | " + dateFormat(date);
+        StringBuilder sb = new StringBuilder();
+        sb.append("D | ").append(super.isDone() ? "1" : "0").append(" | ").append(super.getTaskName())
+                .append(" | ").append(DateUtils.formatToString(date));
+
+        if (super.getAssignedTo() != null) {
+            sb.append(" | ").append(super.getAssignedTo().getName())
+                    .append("|").append(super.getAssignedTo().getRelationship());
+        }
+
+        return sb.toString();
     }
 
     /**
@@ -40,7 +50,7 @@ public class Deadline extends Task {
     @Override
     public String toString() {
         return this.stringType + super.getCheckbox() + " "
-                + super.toString() + " (by: " + dateFormat(date) + ")";
+                + super.toString() + " (by: " + DateUtils.formatToString(date) + ")";
     }
 
     /**

@@ -4,10 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 
+import alterego.utils.DateUtils;
 import org.junit.jupiter.api.Test;
 
 public class DeadlineTest {
-    private Deadline deadline = new Deadline("a_task_name", LocalDate.parse("2026-04-20"));
+    private Deadline deadline = new Deadline("a_task_name", DateUtils.parseDateFromInput("20-04-2026"));
 
     @Test
     public void toFileFormatTest() {

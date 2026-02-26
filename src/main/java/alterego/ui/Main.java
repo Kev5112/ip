@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    private AlterEgo alterEgo = new AlterEgo("./data/alterego.AlterEgo.txt");
+    private AlterEgo alterEgo = new AlterEgo("./data/alterego.AlterEgo.txt", "./data/alterego.AlterEgoContacts.txt");
 
     @Override
     public void start(Stage stage) {

@@ -23,4 +23,8 @@ public class DateUtils {
             throw new AlterEgoException("Invalid date format. Proper format: dd-MM-yyyy");
         }
     }
+
+    public static String formatToString(LocalDate date) throws AlterEgoException {
+        return date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
+    }
 }

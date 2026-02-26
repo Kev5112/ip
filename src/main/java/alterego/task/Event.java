@@ -1,5 +1,7 @@
 package alterego.task;
 
+import alterego.utils.DateUtils;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -39,8 +41,17 @@ public class Event extends Task {
      */
     @Override
     public String toFileFormat() {
-        return "E | " + (super.isDone() ? "1" : "0") + " | " + super.toString()
-                + " | " + dateFormat(fromDate) + " -> " + dateFormat(toDate);
+        StringBuilder sb = new StringBuilder();
+        sb.append("E | ").append(super.isDone() ? "1" : "0").append(" | ").append(super.getTaskName())
+                .append(" | ").append(DateUtils.formatToString(fromDate))
+                .append(" -> ").append(DateUtils.formatToString(toDate));
+
+        if (super.getAssignedTo() != null) {
+            sb.append(" | ").append(super.getAssignedTo().getName())
+                    .append("|").append(super.getAssignedTo().getRelationship());
+        }
+
+        return sb.toString();
     }
 
     /**
@@ -53,7 +64,7 @@ public class Event extends Task {
     public String toString() {
         return this.stringType + super.getCheckbox() + " "
                 + super.toString()
-                + " (from: " + dateFormat(fromDate) + " to: " + dateFormat(toDate) + ")";
+                + " (from: " + DateUtils.formatToString(fromDate) + " to: " + DateUtils.formatToString(toDate) + ")";
     }
 
     /**

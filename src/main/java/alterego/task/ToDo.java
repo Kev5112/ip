@@ -21,9 +21,16 @@ public class ToDo extends Task {
      */
     @Override
     public String toFileFormat() {
-        return "T | " + (super.isDone() ? "1" : "0") + " | " + super.toString();
-    }
+        StringBuilder sb = new StringBuilder();
+        sb.append("T | ").append(super.isDone() ? "1" : "0").append(" | ").append(super.getTaskName());
 
+        if (super.getAssignedTo() != null) {
+            sb.append(" | ").append(super.getAssignedTo().getName())
+                    .append("|").append(super.getAssignedTo().getRelationship());
+        }
+
+        return sb.toString();
+    }
     /**
      * Returns string representation for display.
      * Format: "[T][X/""] description"

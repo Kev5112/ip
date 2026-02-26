@@ -1,7 +1,6 @@
 package alterego.task;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,9 +8,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import alterego.contact.Contact;
+import alterego.storage.TaskStorage;
 import alterego.utils.AlterEgoException;
-import alterego.storage.Storage;
 import alterego.utils.DateUtils;
+import alterego.utils.ExceptionCatcher;
 
 /**
  * Manages task operations.
@@ -20,7 +21,7 @@ public class TaskList {
     private String loadStatus = null;
     private ArrayList<Task> tasks;
     private Set<Task> taskSet;
-    private Storage storage;
+    private TaskStorage taskStorage;
 
     public String getLoadStatus() {
         return loadStatus;
@@ -28,18 +29,18 @@ public class TaskList {
 
     /**
      * Creates TaskList with given tasks and storage.
-     * @param storage storage handler
+     * @param taskStorage storage handler
      */
-    public TaskList(Storage storage) {
-        assert storage != null : "Storage cannot be null";
+    public TaskList(TaskStorage taskStorage) {
+        assert taskStorage != null : "Storage cannot be null";
         try {
-            this.tasks = storage.loadTasks();
+            this.tasks = taskStorage.loadTasks().getTasks();
             assert this.tasks != null : "loadTasks() method should not return null";
         } catch (FileNotFoundException e) {
             this.tasks = new ArrayList<Task>();
             loadStatus = "Warning: File not found. Creating a new list.";
         }
-        this.storage = storage;
+        this.taskStorage = taskStorage;
         this.taskSet = new HashSet<>(tasks);
     }
 
@@ -53,6 +54,10 @@ public class TaskList {
         Task newTask = new ToDo(taskName);
         handleDuplicate(newTask);
         return addTask(newTask);
+    }
+
+    public ArrayList<Task> getTasks() {
+        return new ArrayList<Task>(tasks);
     }
 
     /**
@@ -138,7 +143,7 @@ public class TaskList {
         currTask.setDone();
         assert currTask.isDone() : "setDone() doesn't work";
         String successMessage = "Nice! I've marked this task as done:\n " + currTask;
-        return ioExceptionCatcher(() -> storage.rewriteFile(tasks), successMessage);
+        return ExceptionCatcher.catchIoException(() -> taskStorage.rewriteFile(tasks), successMessage);
     }
 
     /**
@@ -155,7 +160,7 @@ public class TaskList {
         currTask.setUndone();
         assert !currTask.isDone() : "setUndone() doesn't work";
         String successMessage = "OK, I've marked this task as not done yet:\n " + currTask;
-        return ioExceptionCatcher(() -> storage.rewriteFile(tasks), successMessage);
+        return ExceptionCatcher.catchIoException(() -> taskStorage.rewriteFile(tasks), successMessage);
     }
 
     /**
@@ -172,7 +177,26 @@ public class TaskList {
         taskSet.remove(removedTask);
         String successMessage = "Noted. I've removed this task:\n " + removedTask + "\n"
                 + "Now you have " + tasks.size() + " tasks in the list.";
-        return ioExceptionCatcher(() -> storage.rewriteFile(tasks), successMessage);
+        return ExceptionCatcher.catchIoException(() -> taskStorage.rewriteFile(tasks), successMessage);
+    }
+
+    public String assignTask(int taskNumber, Contact contact) {
+        if (taskNumber > tasks.size()) {
+            throw new AlterEgoException("There's only " + tasks.size() + " tasks here!");
+        }
+        Task task = tasks.get(taskNumber - 1);
+        task.assignTo(contact);
+        String message = task + " assigned to " + contact;
+        return ExceptionCatcher.catchIoException(() -> taskStorage.rewriteFile(tasks), message);
+    }
+
+    public void unassignTask(Contact contact) {
+        for (Task task : tasks) {
+            if (contact.equals(task.getAssignedTo())) {
+                task.assignTo(null);
+            }
+        }
+        ExceptionCatcher.catchIoException(() -> taskStorage.rewriteFile(tasks), null);
     }
 
     /**
@@ -182,7 +206,15 @@ public class TaskList {
         tasks = new ArrayList<Task>();
         taskSet = new HashSet<>();
         String successMessage = "Cleared data from storage. You have 0 task now.";
-        return ioExceptionCatcher(storage::clear, successMessage);
+        return ExceptionCatcher.catchIoException(taskStorage::clear, successMessage);
+    }
+
+    public int getSize() {
+        return tasks.size();
+    }
+
+    public Task getTask(int index) {
+        return tasks.get(index);
     }
 
     private void handleDuplicate(Task task) throws AlterEgoException {
@@ -196,7 +228,7 @@ public class TaskList {
         tasks.add(newTask);
         String message = "Got it. I've added this task:\n " + newTask
                 + "\nNow you have " + tasks.size() + " tasks in the list.\n";
-        return ioExceptionCatcher(() -> storage.addNewTask(newTask), message);
+        return ExceptionCatcher.catchIoException(() -> taskStorage.addNewTask(newTask), message);
     }
 
     private boolean hasOverlap(LocalDate newFrom, LocalDate newTo) {
@@ -208,17 +240,4 @@ public class TaskList {
         return overlapCount > 0;
     }
 
-    private String ioExceptionCatcher(FileOperation fileOperation, String successMessage) {
-        try {
-            fileOperation.execute();
-            return successMessage;
-        } catch (IOException e) {
-            throw new AlterEgoException("Error: IO exception");
-        }
-    }
-
-    @FunctionalInterface
-    private interface FileOperation {
-        void execute() throws IOException;
-    }
 }

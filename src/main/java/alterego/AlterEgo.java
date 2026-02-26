@@ -1,7 +1,9 @@
 package alterego;
 
 import alterego.command.Parser;
-import alterego.storage.Storage;
+import alterego.contact.ContactList;
+import alterego.storage.ContactStorage;
+import alterego.storage.TaskStorage;
 import alterego.task.TaskList;
 import alterego.utils.AlterEgoException;
 
@@ -11,18 +13,22 @@ import alterego.utils.AlterEgoException;
  */
 public class AlterEgo {
 
-    private Storage storage;
+    private TaskStorage taskStorage;
+    private ContactStorage contactStorage;
     private TaskList taskList;
+    private ContactList contactList;
     private Parser parser;
 
     /**
      * Constructs an AlterEgo chatbot instance with the specified file path for data storage.
      * @param filePath the path to the file where tasks are stored.
      */
-    public AlterEgo(String filePath) {
-        storage = new Storage(filePath);
-        taskList = new TaskList(storage);
-        parser = new Parser(taskList);
+    public AlterEgo(String filePathTask, String filePathContact) {
+        taskStorage = new TaskStorage(filePathTask);
+        contactStorage = new ContactStorage(filePathContact);
+        taskList = new TaskList(taskStorage);
+        contactList = new ContactList(contactStorage, taskList);
+        parser = new Parser(taskList, contactList);
     }
 
     public String getResponse(String input) {

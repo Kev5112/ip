@@ -1,5 +1,7 @@
 package alterego.task;
 
+import alterego.contact.Contact;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -8,8 +10,9 @@ import java.util.Objects;
  * Abstract base class for all task types (Todo, Deadline, Event).
  */
 public abstract class Task {
-    protected String taskName;
-    protected boolean isDone;
+    private String taskName;
+    private boolean isDone;
+    private Contact assignedTo;
 
     /**
      * Creates a task with the given name, initially not done.
@@ -19,6 +22,15 @@ public abstract class Task {
         assert taskName != null : "Task name cannot be null";
         this.taskName = taskName;
         this.isDone = false;
+        this.assignedTo = null;
+    }
+
+    public void assignTo(Contact contact) {
+        this.assignedTo = contact;
+    }
+
+    public Contact getAssignedTo() {
+        return assignedTo;
     }
 
     /**
@@ -57,19 +69,14 @@ public abstract class Task {
      * Gets task description.
      * @return task name
      */
+    @Override
     public String toString() {
-        assert taskName != null : "Task name should not be null when calling toString";
-        return taskName;
+        String assignment = (assignedTo != null) ? " [→ " + assignedTo.getName() + "]" : "";
+        return taskName + assignment;
     }
 
-    /**
-     * Formats a date as "MMM d yyyy" (e.g., "Mar 15 2024").
-     * @param date the date to format
-     * @return formatted date string
-     */
-    public static String dateFormat(LocalDate date) {
-        assert date != null : "Date cannot be null";
-        return date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
+    public String getTaskName() {
+        return taskName;
     }
 
     /**

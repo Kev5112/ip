@@ -1,5 +1,7 @@
 package alterego.command;
 
+import alterego.contact.Contact;
+import alterego.contact.ContactList;
 import alterego.utils.AlterEgoException;
 import alterego.task.TaskList;
 import alterego.ui.Ui;
@@ -9,10 +11,12 @@ import alterego.ui.Ui;
  */
 public class Parser {
     private TaskList taskList;
+    private ContactList contactList;
 
-    public Parser(TaskList taskList) {
+    public Parser(TaskList taskList, ContactList contactList) {
         assert taskList != null : "TaskList is null. Should've been handled in TaskList class";
         this.taskList = taskList;
+        this.contactList = contactList;
     }
 
     public String execute(String input) throws AlterEgoException {
@@ -38,6 +42,9 @@ public class Parser {
         if (input.equals("help")) {
             return Command.HELP;
         }
+        if (input.equals("contactlist")) {
+            return Command.CONTACTLIST;
+        }
         if (input.startsWith("find")) {
             return Command.FIND;
         }
@@ -59,13 +66,22 @@ public class Parser {
         if (input.startsWith("event")) {
             return Command.EVENT;
         }
+        if (input.startsWith("contact")) {
+            return Command.CONTACT;
+        }
+        if (input.startsWith("assign")) {
+            return Command.ASSIGN;
+        }
         throw new AlterEgoException("I don't understand that. Use 'help' to get the list of commands.");
     }
 
     private void checkValidity(String input, Command command) throws AlterEgoException {
         assert command != null : "command should not be null by now";
-        if (command == Command.BYE || command == Command.CLEAR
-                || command == Command.LIST || command == Command.HELP) {
+
+        //no need arguments
+        if (command == Command.LIST || command == Command.BYE ||
+                command == Command.CLEAR || command == Command.HELP ||
+                command == Command.CONTACTLIST) {
             return;
         }
 
@@ -73,28 +89,46 @@ public class Parser {
             throw new AlterEgoException(getMissingArgumentMessage(command));
         }
 
-        if (command == Command.DELETE || command == Command.MARK || command == Command.UNMARK) {
-            validateIndex(input, command);
+        if (command == Command.MARK || command == Command.UNMARK) {
+            validateIndex(input, command, 0);
+        }
+        if (command == Command.DELETE) {
+            validateIndex(input, command, 1);
+        }
+        if (command == Command.ASSIGN) {
+            validateIndex(input, command, 0);
         }
     }
 
-    private void validateIndex(String input, Command command) throws AlterEgoException {
-        String numString = extractIndexString(input, command);
+    private void validateIndex(String input, Command command, int offset) throws AlterEgoException {
+        String numString = extractIndexString(input, command, offset);
         try {
             int number = Integer.parseInt(numString);
             if (number < 1) {
                 throw new AlterEgoException("Error: Invalid task number!");
             }
         } catch (NumberFormatException e) {
-            throw new AlterEgoException("Error: " + command.toString()
-                    + " should be followed by a digit!");
+            switch (command) {
+            case DELETE:
+                throw new AlterEgoException("Invalid format. Proper format: "
+                        + "delete t1 (delete task)/delete c1 (delete contact)");
+            case MARK:
+            case UNMARK:
+                throw new AlterEgoException("Error: " + command.toString()
+                        + " should be followed by a number!");
+            case ASSIGN:
+                throw new AlterEgoException("Invalid format. Proper format: "
+                        + "assign {tasknumber} /to {contactname}");
+            default:
+                throw new AssertionError("Should not reach here");
+            }
         }
     }
 
-    private String extractIndexString(String input, Command command) throws AlterEgoException {
-        String numString = input.substring(command.getStrLen()).trim();
-        assert !numString.contains(" ") : "Number string should have no more spaces";
-        return numString;
+    private String extractIndexString(String input, Command command, int offset) throws AlterEgoException {
+        String numString = input.substring(command.getStrLen() + 1 + offset).trim();
+        String[] parts = numString.split(" ");
+        return parts[0];
     }
 
     private String executeCommand(String input, Command command) throws AlterEgoException {
@@ -110,20 +144,74 @@ public class Parser {
         case FIND:
             return taskList.find(input.substring(Command.FIND.getStrLen()).trim());
         case DELETE:
-            return taskList.delete(Integer.parseInt(extractIndexString(input, command)));
+            return handleDelete(input);
         case MARK:
-            return taskList.mark(Integer.parseInt(extractIndexString(input, command)));
+            return taskList.mark(Integer.parseInt(extractIndexString(input, command, 0)));
         case UNMARK:
-            return taskList.unmark(Integer.parseInt(extractIndexString(input, command)));
+            return taskList.unmark(Integer.parseInt(extractIndexString(input, command, 0)));
         case TODO:
             return taskList.addToDo(input.substring(Command.TODO.getStrLen()).trim());
         case DEADLINE:
             return handleDeadline(input);
         case EVENT:
             return handleEvent(input);
+        case CONTACT:
+            return handleContact(input);
+        case CONTACTLIST:
+            return contactList.enumContact();
+        case ASSIGN:
+            return handleAssign(input);
         default:
             throw new AssertionError("Should not reach here");
         }
+    }
+
+    private String handleContact(String input) throws AlterEgoException {
+        int slashIndex = input.indexOf("/as");
+        if (slashIndex == -1) {
+            throw new AlterEgoException("Invalid format. Use: add-contact NAME /as RELATIONSHIP");
+        }
+        String name = input.substring(Command.CONTACT.getStrLen(), slashIndex).trim();
+        String relationship = input.substring(slashIndex + "/as".length()).trim();
+        if (name.isEmpty() || relationship.isEmpty()) {
+            throw new AlterEgoException("Name and relationship cannot be empty.");
+        }
+        contactList.addContact(name, relationship);
+        return "Added contact: " + name + " (" + relationship + ")";
+    }
+
+    private String handleAssign(String input) throws AlterEgoException {
+        int toIndex = input.indexOf("/to");
+        if (toIndex == -1) {
+            throw new AlterEgoException("Invalid format. Use: assign TASK_NUMBER /to CONTACT_NAME");
+        }
+        String taskNumStr = input.substring(Command.ASSIGN.getStrLen(), toIndex).trim();
+        String contactName = input.substring(toIndex + "/to".length()).trim();
+
+        try {
+            int taskNum = Integer.parseInt(taskNumStr);
+            Contact contact = contactList.findContact(contactName);
+
+            if (contact == null) {
+                throw new AlterEgoException("Contact '" + contactName + "' not found.");
+            }
+
+            return taskList.assignTask(taskNum, contact);
+
+        } catch (NumberFormatException e) {
+            throw new AlterEgoException("Invalid task number: " + taskNumStr);
+        }
+    }
+
+    private String handleDelete(String input) throws AlterEgoException {
+        String[] parts = input.split(" ");
+        if (parts[1].startsWith("t")) {
+            return taskList.delete(Integer.parseInt(parts[1].substring(1).trim()));
+        }
+        if (parts[1].startsWith("c")) {
+            return contactList.delete(Integer.parseInt(parts[1].substring(1).trim()));
+        }
+        throw new AlterEgoException("Invalid format. Proper format : delete {t/c}{number}");
     }
 
     private String handleDeadline(String input) throws AlterEgoException {
@@ -180,8 +268,12 @@ public class Parser {
         case DEADLINE:
         case EVENT:
             return "Error: you didn't input the description??";
+        case CONTACT:
+            return "Name and relationship?";
+        case ASSIGN:
+            return "Assign what?";
         default:
-            throw new AssertionError("Should not reach here");
+            throw new AssertionError("Should not reach here, missingArgumentMessage");
         }
     }
 }

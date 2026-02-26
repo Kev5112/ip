@@ -14,6 +14,9 @@ public enum Command {
     TODO,
     DEADLINE,
     EVENT,
+    CONTACT,
+    CONTACTLIST,
+    ASSIGN,
     BYE;
 
     public int getStrLen() {
