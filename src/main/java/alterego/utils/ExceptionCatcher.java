@@ -3,7 +3,7 @@ package alterego.utils;
 import java.io.IOException;
 
 /**
- * Utility class for repetitive IO exception handling
+ * Provides utility for repetitive IO exception handling
  */
 public class ExceptionCatcher {
     /**

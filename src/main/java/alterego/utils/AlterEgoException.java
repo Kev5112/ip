@@ -1,7 +1,7 @@
 package alterego.utils;
 
 /**
- * Custom exception for AlterEgo application errors.
+ * Represents custom exception for AlterEgo application errors.
  */
 public class AlterEgoException extends RuntimeException {
 

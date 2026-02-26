@@ -10,12 +10,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
- * The main entry point for the JavaFX application.
+ * Represents the main entry point for the JavaFX application.
  * Initializes the primary stage and loads the main window FXML.
  * Sets up the AlterEgo chatbot instance and connects it to the UI controller.
  */
 public class Main extends Application {
-    private AlterEgo alterEgo = new AlterEgo("./data/alterego.AlterEgo.txt", "./data/alterego.AlterEgoContacts.txt");
+    private AlterEgo alterEgo = new AlterEgo("./data/alterego.AlterEgo.txt",
+            "./data/alterego.AlterEgoContacts.txt");
 
     /**
      * Starts the JavaFX application by setting up the primary stage.

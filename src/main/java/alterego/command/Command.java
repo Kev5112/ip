@@ -1,7 +1,7 @@
 package alterego.command;
 
 /**
- * Enumeration of all available commands in AlterEgo.
+ * Enumerates all available commands in AlterEgo.
  */
 public enum Command {
     TODO,

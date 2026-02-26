@@ -3,7 +3,7 @@ package alterego.ui;
 import alterego.command.Command;
 
 /**
- * User interface handler for AlterEgo chatbot.
+ * Represents the user interface handler for AlterEgo chatbot.
  */
 public class Ui {
     /**

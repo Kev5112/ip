@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
- * Abstract base class for all task types (Todo, Deadline, Event).
+ * Represents abstract base class for all task types (Todo, Deadline, Event).
  */
 public abstract class Task {
     private String taskName;

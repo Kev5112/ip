@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * Controller class for the main application window.
+ * Represents the controller class for the main application window.
  * Manages user interactions, displays dialog boxes, and coordinates
  * between the UI components and the AlterEgo backend.
  */

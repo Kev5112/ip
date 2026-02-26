@@ -8,7 +8,7 @@ import alterego.task.TaskList;
 import alterego.utils.AlterEgoException;
 
 /**
- * The main class for the AlterEgo chatbot application.
+ * Represents the main class for the AlterEgo chatbot application.
  * AlterEgo is a task management chatbot that helps users track todos, deadlines, and events.
  */
 public class AlterEgo {
@@ -21,7 +21,8 @@ public class AlterEgo {
 
     /**
      * Constructs an AlterEgo chatbot instance with the specified file path for data storage.
-     * @param filePath the path to the file where tasks are stored.
+     * @param filePathTask the path to the file where tasks are stored.
+     * @param filePathContact the path to the file where contacts are stored.
      */
     public AlterEgo(String filePathTask, String filePathContact) {
         taskStorage = new TaskStorage(filePathTask);
@@ -31,6 +32,12 @@ public class AlterEgo {
         parser = new Parser(taskList, contactList);
     }
 
+    /**
+     * Processes user input and returns the chatbot's response.
+     * Catches any AlterEgoException and returns its message.
+     * @param input Raw user input string
+     * @return Response message from the chatbot
+     */
     public String getResponse(String input) {
         try {
             String output = parser.execute(input);
@@ -40,6 +47,11 @@ public class AlterEgo {
         }
     }
 
+    /**
+     * Returns the combined load status from both task and contact storage.
+     * If both storages loaded successfully, returns null.
+     * @return Combined warning messages, or null if no warnings
+     */
     public String getLoadStatus() {
         String taskWarning = taskList.getLoadStatus();
         String contactWarning = contactList.getLoadStatus();
