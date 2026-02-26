@@ -139,6 +139,7 @@ public class TaskStorage {
         }
     }
 
+    // helper function
     private Task handleTodo(String[] parts) throws AlterEgoException {
         if (parts.length < 3 || parts.length > 4) {
             throw new AlterEgoException("Problem with file: Todo needs 3 or 4 parts separated by '|' "
