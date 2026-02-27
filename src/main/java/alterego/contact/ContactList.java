@@ -8,14 +8,16 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import alterego.storage.ContactStorage;
+import alterego.task.Task;
 import alterego.task.TaskList;
 import alterego.utils.AlterEgoException;
 import alterego.utils.ExceptionCatcher;
+import alterego.utils.Loader;
 
 /**
  * Manages contact operations
  */
-public class ContactList {
+public class ContactList implements Loader {
     private String loadStatus = null;
     private Set<Contact> contactSet;
     private ArrayList<Contact> contacts;
@@ -30,25 +32,33 @@ public class ContactList {
      */
     public ContactList(ContactStorage contactStorage, TaskList taskList) {
         this.contactStorage = contactStorage;
+        this.contacts = new ArrayList<>();
         try {
-            this.contacts = contactStorage.loadContacts();
-            this.contactSet = new HashSet<>(contacts);
+            contactStorage.loadContacts(this);
             this.tasks = taskList;
-            assert this.contacts != null : "loadTasks() method should not return null";
         } catch (FileNotFoundException e) {
-            this.contacts = new ArrayList<>();
-            this.contactSet = new HashSet<>();
             this.tasks = taskList;
             loadStatus = "Warning: Contact data not found. Creating a new list.";
         }
+        this.contactSet = new HashSet<>(contacts);
+    }
+
+    public void loadContact(Contact contact) {
+        this.contacts.add(contact);
     }
 
     /**
      * Returns the load status message from initialization.
      * @return Status message if file was not found, null otherwise
      */
+    @Override
     public String getLoadStatus() {
         return loadStatus;
+    }
+
+    @Override
+    public void addLoadStatus(String loadStatus) {
+        this.loadStatus = (this.loadStatus == null) ? loadStatus : this.loadStatus + loadStatus;
     }
 
     /**

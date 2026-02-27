@@ -1,9 +1,9 @@
 package alterego.task;
 
-import alterego.utils.DateUtils;
-
 import java.time.LocalDate;
 import java.util.Objects;
+
+import alterego.utils.DateUtils;
 
 /**
  * Represents an Event task with start and end dates.

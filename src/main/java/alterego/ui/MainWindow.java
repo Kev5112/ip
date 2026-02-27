@@ -61,7 +61,7 @@ public class MainWindow extends AnchorPane {
         assert alterEgo != null : "Alter Ego hasn't been initialised?";
         dialogContainer.getChildren().add(
                 DialogBox.getAlterEgoDialog(Ui.decorate(Ui.hello()
-                                + (alterEgo.getLoadStatus() != null ? "\n" + alterEgo.getLoadStatus() : "")),
+                                + (alterEgo.getLoadStatus() != null ? "\n\n" + alterEgo.getLoadStatus() : "")),
                         alterEgoImage)
         );
     }

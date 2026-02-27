@@ -16,7 +16,7 @@ public class Contact {
      */
     public Contact(String personName, String relationship) {
         this.personName = personName;
-        this.relationship = relationship;
+        this.relationship = relationship.toLowerCase();
     }
 
     /**
@@ -59,7 +59,7 @@ public class Contact {
             return false;
         }
         Contact other = (Contact) obj;
-        return Objects.equals(personName, other.personName);
+        return Objects.equals(personName.toLowerCase(), other.personName.toLowerCase());
     }
 
     /**
@@ -68,6 +68,6 @@ public class Contact {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(personName);
+        return Objects.hash(personName.toLowerCase());
     }
 }

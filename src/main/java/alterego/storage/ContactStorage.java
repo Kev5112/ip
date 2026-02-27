@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import alterego.contact.Contact;
+import alterego.contact.ContactList;
 import alterego.utils.AlterEgoException;
 
 /**
@@ -64,29 +65,41 @@ public class ContactStorage {
             fw.write(contact.getName() + "|" + contact.getRelationship() + System.lineSeparator());
         }
         fw.close();
-
-        File f = new File(filePath);
     }
 
     /**
      * Loads contacts from storage file.
      * Expects each line in format: name|relationship
-     * @return List of loaded contacts
      * @throws FileNotFoundException if storage file does not exist
      * @throws AlterEgoException if file format is invalid
      */
-    public ArrayList<Contact> loadContacts() throws FileNotFoundException, AlterEgoException {
-        ArrayList<Contact> contacts = new ArrayList<>();
+    public void loadContacts(ContactList contacts) throws FileNotFoundException, AlterEgoException {
         File f = new File(filePath);
         Scanner s = new Scanner(f);
+        int lineCount = 0;
         while (s.hasNextLine()) {
-            String[] parts = s.nextLine().split("\\|");
-            if (parts.length != 2) {
-                throw new AlterEgoException("Problem with file. "
-                        + "Please edit manually or perform 'clear'");
+            lineCount += 1;
+            String line = s.nextLine().trim();
+            Contact newContact = null;
+            try {
+                newContact = parseFromFile(line);
+            } catch (AlterEgoException e) {
+                contacts.addLoadStatus("Contact storage problem: Problem with line "
+                        + lineCount + ". " + e.getMessage() + "\n");
             }
-            contacts.add(new Contact(parts[0].trim(), parts[1].trim()));
+            if (newContact != null) {
+                contacts.loadContact(newContact);
+            }
         }
-        return contacts;
+    }
+
+    private Contact parseFromFile(String line) throws AlterEgoException {
+        String[] parts = line.split("\\|");
+        if (parts.length != 2) {
+            throw new AlterEgoException("Please edit manually or perform 'clear'.");
+        }
+        String name = parts[0].trim();
+        String relationship = parts[1].trim();
+        return new Contact(name, relationship);
     }
 }

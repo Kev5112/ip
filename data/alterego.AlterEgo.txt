@@ -1,3 +1,0 @@
-T | 0 | read book
-D | 0 | return book | Apr 20 2026
-E | 0 | camping | Apr 21 2026 -> Apr 28 2026

@@ -13,11 +13,12 @@ import alterego.storage.TaskStorage;
 import alterego.utils.AlterEgoException;
 import alterego.utils.DateUtils;
 import alterego.utils.ExceptionCatcher;
+import alterego.utils.Loader;
 
 /**
  * Manages task operations.
  */
-public class TaskList {
+public class TaskList implements Loader {
     private String loadStatus = null;
     private ArrayList<Task> tasks;
     private Set<Task> taskSet;
@@ -29,22 +30,33 @@ public class TaskList {
      */
     public TaskList(TaskStorage taskStorage) {
         assert taskStorage != null : "Storage cannot be null";
+        this.tasks = new ArrayList<>();
+        this.taskStorage = taskStorage;
         try {
-            this.tasks = taskStorage.loadTasks();
+            taskStorage.loadTasks(this);
             assert this.tasks != null : "loadTasks() method should not return null";
         } catch (FileNotFoundException e) {
-            this.tasks = new ArrayList<Task>();
-            loadStatus = "Warning: Task data not found. Creating a new list.";
+            this.tasks = new ArrayList<>();
+            loadStatus = "Warning: Task data not found. Creating a new list.\n";
         }
-        this.taskStorage = taskStorage;
         this.taskSet = new HashSet<>(tasks);
+    }
+
+    public void loadTask(Task task) {
+        this.tasks.add(task);
     }
 
     /**
      * @return warning message if file is not found
      */
+    @Override
     public String getLoadStatus() {
         return loadStatus;
+    }
+
+    @Override
+    public void addLoadStatus(String loadStatus) {
+        this.loadStatus = (this.loadStatus == null) ? loadStatus : this.loadStatus + loadStatus;
     }
 
     /**

@@ -1,10 +1,9 @@
 package alterego.task;
 
-import alterego.contact.Contact;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+
+import alterego.contact.Contact;
+import alterego.utils.AlterEgoException;
 
 /**
  * Represents abstract base class for all task types (Todo, Deadline, Event).
@@ -20,6 +19,9 @@ public abstract class Task {
      */
     public Task(String taskName) {
         assert taskName != null : "Task name cannot be null";
+        if (taskName.isBlank()) {
+            throw new AlterEgoException("Task name cannot be blank");
+        }
         this.taskName = taskName;
         this.isDone = false;
         this.assignedTo = null;

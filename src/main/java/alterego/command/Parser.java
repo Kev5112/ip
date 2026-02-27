@@ -36,7 +36,7 @@ public class Parser {
             return "";
         }
 
-        Command command = commandExtractor(input);
+        Command command = commandExtractor(input.trim().toLowerCase());
         checkValidity(input, command);
         return executeCommand(input, command);
     }
@@ -103,7 +103,7 @@ public class Parser {
             return;
         }
 
-        if (input.length() <= command.getStrLen()) {
+        if (input.trim().length() <= command.getStrLen()) {
             throw new AlterEgoException(getMissingArgumentMessage(command));
         }
 

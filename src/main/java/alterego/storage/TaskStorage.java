@@ -9,10 +9,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import alterego.contact.Contact;
-import alterego.task.Deadline;
-import alterego.task.Event;
-import alterego.task.Task;
-import alterego.task.ToDo;
+import alterego.task.*;
 import alterego.utils.AlterEgoException;
 import alterego.utils.DateUtils;
 
@@ -94,23 +91,30 @@ public class TaskStorage {
 
     /**
      * Loads tasks from storage file.
-     * @return List of loaded tasks
      * @throws FileNotFoundException if storage file does not exist
      * @throws AlterEgoException if file format is invalid
      */
-    public ArrayList<Task> loadTasks() throws FileNotFoundException, AlterEgoException {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public void loadTasks(TaskList tasks) throws FileNotFoundException, AlterEgoException {
         File f = new File(filePath);
         Scanner s = new Scanner(f);
+        int lineCount = 0;
         while (s.hasNextLine()) {
+            lineCount += 1;
             String nextString = s.nextLine().trim();
             if (nextString.isEmpty()) {
                 continue;
             }
-            Task task = parseFromFile(nextString);
-            tasks.add(task);
+            Task task = null;
+            try {
+                task = parseFromFile(nextString);
+            } catch (AlterEgoException e) {
+                tasks.addLoadStatus("Task storage problem: Problem with line "
+                        + lineCount + ". " + e.getMessage() + "\n");
+            }
+            if (task != null) {
+                tasks.loadTask(task);
+            }
         }
-        return tasks;
     }
 
     //helper method to parse lines into task
@@ -118,11 +122,10 @@ public class TaskStorage {
         String[] parts = line.split(" \\| ");
 
         if (parts.length < 3) {
-            throw new AlterEgoException("Problem with file: Not enough arguments. "
-                    + "Please edit manually or perform 'clear'");
+            throw new AlterEgoException("Please edit manually or perform 'clear'.");
         }
         if (!parts[1].equals("0") && !parts[1].equals("1")) {
-            throw new AlterEgoException("Problem with file: task doneness should be '0' or '1'. "
+            throw new AlterEgoException("Task doneness should be '0' or '1'. "
                     + "Please edit manually or perform 'clear'");
         }
 
@@ -134,17 +137,18 @@ public class TaskStorage {
         case "E":
             return handleEvent(parts);
         default:
-            throw new AlterEgoException("Problem with file: task type should be 'T', 'D', or 'E'. "
-                    + "Please edit manually or perform 'clear'");
+            throw new AlterEgoException("Task type should be 'T', 'D', or 'E'. "
+                    + "Please edit manually or perform 'clear'.");
         }
     }
 
     // helper function
     private Task handleTodo(String[] parts) throws AlterEgoException {
-        if (parts.length < 3 || parts.length > 4) {
-            throw new AlterEgoException("Problem with file: Todo needs 3 or 4 parts separated by '|' "
-                    + "Please edit manually or perform 'clear'");
+        if (parts.length > 4) {
+            throw new AlterEgoException("Todo needs 3 or 4 parts separated by '|'. "
+                    + "Please edit manually or perform 'clear'.");
         }
+        assert parts.length >= 3 : "Parts should've been more than 2 here";
         ToDo todo = new ToDo(parts[2]);
         if (parts.length == 4) {
             handleContact(todo, parts[3]);
@@ -158,8 +162,8 @@ public class TaskStorage {
 
     private Task handleDeadline(String[] parts) throws AlterEgoException {
         if (parts.length < 4 || parts.length > 5) {
-            throw new AlterEgoException("Problem with file: Deadline needs 4 or 5 parts separated by '|' "
-                    + "Please edit manually or perform 'clear'");
+            throw new AlterEgoException("Deadline needs 4 or 5 parts separated by '|'. "
+                    + "Please edit manually or perform 'clear'.");
         }
 
         LocalDate date = DateUtils.parseDateFromFile(parts[3]);
@@ -177,13 +181,13 @@ public class TaskStorage {
 
     private Task handleEvent(String[] parts) throws AlterEgoException {
         if (parts.length < 4 || parts.length > 5) {
-            throw new AlterEgoException("Problem with file: Event needs 4 or 5 parts separated by '|' "
-                    + "Please edit manually or perform 'clear'");
+            throw new AlterEgoException("Event needs 4 or 5 parts separated by '|'. "
+                    + "Please edit manually or perform 'clear'.");
         }
 
         String[] dates = parts[3].split(" -> ");
         if (dates.length != 2) {
-            throw new AlterEgoException("Event should have two dates separated by ' -> '");
+            throw new AlterEgoException("Event should have two dates separated by ' -> '.");
         }
 
         LocalDate fromDate = DateUtils.parseDateFromFile(dates[0]);
@@ -204,8 +208,8 @@ public class TaskStorage {
     private void handleContact(Task task, String contactPart) throws AlterEgoException {
         String[] contactParts = contactPart.split("\\|");
         if (contactParts.length != 2) {
-            throw new AlterEgoException("Problem with file: Invalid contact format. "
-                    + "Expected 'name|relationship' but got: '" + contactPart + "'");
+            throw new AlterEgoException("Invalid contact format. "
+                    + "Expected 'name|relationship' but got: '" + contactPart + "'.");
         }
 
         Contact contact = new Contact(contactParts[0].trim(), contactParts[1].trim());

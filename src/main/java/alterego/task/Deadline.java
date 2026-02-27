@@ -1,9 +1,9 @@
 package alterego.task;
 
-import alterego.utils.DateUtils;
-
 import java.time.LocalDate;
 import java.util.Objects;
+
+import alterego.utils.DateUtils;
 
 /**
  * Represents a Deadline task with a due date.
