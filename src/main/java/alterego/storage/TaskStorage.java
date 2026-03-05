@@ -1,15 +1,11 @@
 package alterego.storage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Scanner;
 
 import alterego.contact.Contact;
-import alterego.data.Storable;
-import alterego.list.TaskList;
 import alterego.task.Deadline;
 import alterego.task.Event;
 import alterego.task.Task;
@@ -31,16 +27,6 @@ public class TaskStorage extends Storage<Task> {
     }
 
     /**
-     * Clears all tasks from storage file.
-     */
-    public void clear() throws IOException {
-        ensureDirectoryExists();
-        FileWriter fw = createFileWriter();
-        fw.write("");
-        fw.close();
-    }
-
-    /**
      * Appends a single task to storage file.
      * @param task task to append to file
      */
@@ -56,12 +42,12 @@ public class TaskStorage extends Storage<Task> {
     }
 
     /**
-     * Loads tasks from storage file.
-     * @throws FileNotFoundException if storage file does not exist
-     * @throws AlterEgoException if file format is invalid
+     * Parses a single line from the storage file into a storable object.
+     * @param line The line read from the file
+     * @return The parsed storable object
+     * @throws AlterEgoException if the line format is invalid or cannot be parsed
      */
-
-    //helper method to parse lines into task
+    @Override
     public Task parseFromFile(String line) throws AlterEgoException {
         String[] parts = line.split(" \\| ");
 

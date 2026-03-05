@@ -76,6 +76,7 @@ public class MainWindow extends AnchorPane {
 
     /**
      * Handles user input when the send button is clicked or Enter is pressed.
+     * AI assistance is used for creating PauseTransition
      */
     @FXML
     private void handleUserInput() {
