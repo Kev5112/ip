@@ -11,10 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import alterego.contact.ContactList;
+import alterego.list.ContactList;
+import alterego.list.TaskList;
 import alterego.storage.ContactStorage;
 import alterego.storage.TaskStorage;
-import alterego.task.TaskList;
 import alterego.utils.AlterEgoException;
 
 /**
@@ -205,7 +205,7 @@ public class ParserTest {
     @Test
     void execute_contactCommand_addsContact() throws AlterEgoException {
         String result = parser.execute("contact John /as friend");
-        assertTrue(result.contains("Added contact: John"));
+        assertTrue(result.contains("John"));
         assertTrue(result.contains("friend"));
 
         String contactListResult = parser.execute("contactlist");

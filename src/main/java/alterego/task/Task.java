@@ -3,12 +3,13 @@ package alterego.task;
 import java.util.Objects;
 
 import alterego.contact.Contact;
+import alterego.data.Storable;
 import alterego.utils.AlterEgoException;
 
 /**
  * Represents abstract base class for all task types (Todo, Deadline, Event).
  */
-public abstract class Task {
+public abstract class Task implements Storable {
     private String taskName;
     private boolean isDone;
     private Contact assignedTo;
@@ -77,6 +78,7 @@ public abstract class Task {
      * Converts task to file storage format.
      * @return formatted string for file storage
      */
+    @Override
     public abstract String toFileFormat();
 
     /**

@@ -14,9 +14,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import alterego.list.ContactList;
+import alterego.list.TaskList;
 import alterego.storage.ContactStorage;
 import alterego.storage.TaskStorage;
-import alterego.task.TaskList;
 import alterego.utils.AlterEgoException;
 
 /**
@@ -108,7 +109,7 @@ public class ContactListTest {
         assertTrue(result.contains("removed this contact"));
         assertTrue(result.contains("John"));
         assertEquals(1, contactList.getSize());
-        assertNull(contactList.findContact("John"));
+        assertThrows(AlterEgoException.class, () -> contactList.findContact("John"));
         assertNotNull(contactList.findContact("Mary"));
     }
 
@@ -130,7 +131,7 @@ public class ContactListTest {
         ContactList newList = new ContactList(contactStorage, taskList);
 
         assertEquals(1, newList.getSize());
-        assertNull(newList.findContact("John"));
+        assertThrows(AlterEgoException.class, () -> newList.findContact("John"));
         assertNotNull(newList.findContact("Mary"));
     }
 
@@ -190,9 +191,7 @@ public class ContactListTest {
     void findContact_notFound_returnsNull() throws AlterEgoException {
         contactList.addContact("John", "friend");
 
-        Contact found = contactList.findContact("Mary");
-
-        assertNull(found);
+        assertThrows(AlterEgoException.class, () -> contactList.findContact("Mary"));
     }
 
     @Test

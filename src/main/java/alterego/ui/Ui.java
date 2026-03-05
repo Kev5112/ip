@@ -20,7 +20,7 @@ public class Ui {
      * @return Goodbye message
      */
     public static String bye() {
-        return "Bye. Hope to see you again soon!";
+        return "Bye. Don't forget to hydrate! (and touch grass)";
     }
 
     /**

@@ -1,4 +1,4 @@
-package alterego.task;
+package alterego.list;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
@@ -10,15 +10,18 @@ import java.util.stream.IntStream;
 
 import alterego.contact.Contact;
 import alterego.storage.TaskStorage;
+import alterego.task.Deadline;
+import alterego.task.Event;
+import alterego.task.Task;
+import alterego.task.ToDo;
 import alterego.utils.AlterEgoException;
 import alterego.utils.DateUtils;
 import alterego.utils.ExceptionCatcher;
-import alterego.utils.Loader;
 
 /**
  * Manages task operations.
  */
-public class TaskList implements Loader {
+public class TaskList implements DataList<Task> {
     private String loadStatus = null;
     private ArrayList<Task> tasks;
     private Set<Task> taskSet;
@@ -29,24 +32,31 @@ public class TaskList implements Loader {
      * @param taskStorage storage handler
      */
     public TaskList(TaskStorage taskStorage) {
-        assert taskStorage != null : "Storage cannot be null";
         this.tasks = new ArrayList<>();
+        this.taskSet = new HashSet<>();
         this.taskStorage = taskStorage;
         try {
-            taskStorage.loadTasks(this);
+            taskStorage.load(this);
             assert this.tasks != null : "loadTasks() method should not return null";
         } catch (FileNotFoundException e) {
             this.tasks = new ArrayList<>();
             loadStatus = "Warning: Task data not found. Creating a new list.\n";
         }
-        this.taskSet = new HashSet<>(tasks);
-    }
-
-    public void loadTask(Task task) {
-        this.tasks.add(task);
     }
 
     /**
+     * Adds a task to the internal list and set.
+     * Only used for storage loading.
+     * @param task The contact to be added
+     */
+    @Override
+    public void addItem(Task task) {
+        this.tasks.add(task);
+        this.taskSet.add(task);
+    }
+
+    /**
+     * Returns the load status message from initialization
      * @return warning message if file is not found
      */
     @Override
@@ -54,6 +64,10 @@ public class TaskList implements Loader {
         return loadStatus;
     }
 
+    /**
+     * Appends load status of data loading from storage
+     * @param loadStatus The status message to append
+     */
     @Override
     public void addLoadStatus(String loadStatus) {
         this.loadStatus = (this.loadStatus == null) ? loadStatus : this.loadStatus + loadStatus;
@@ -71,8 +85,12 @@ public class TaskList implements Loader {
         return addTask(newTask);
     }
 
+    /**
+     * Returns a copy of all tasks in the list.
+     * @return A new ArrayList containing all tasks
+     */
     public ArrayList<Task> getTasks() {
-        return new ArrayList<Task>(tasks);
+        return new ArrayList<>(tasks);
     }
 
     /**
@@ -144,7 +162,7 @@ public class TaskList implements Loader {
         }
 
         String result = IntStream.range(0, tasks.size())
-                .filter(i -> tasks.get(i).toString().contains(keyword))
+                .filter(i -> tasks.get(i).getTaskName().contains(keyword))
                 .mapToObj(i -> (i + 1) + "." + tasks.get(i) + "\n")
                 .collect(Collectors.joining());
 
@@ -245,10 +263,19 @@ public class TaskList implements Loader {
         return ExceptionCatcher.catchIoException(taskStorage::clear, successMessage);
     }
 
+    /**
+     * Returns the number of tasks currently in the list.
+     * @return The current size of the task list
+     */
     public int getSize() {
         return tasks.size();
     }
 
+    /**
+     * Returns the task at the specified index.
+     * @param index The index of the task to retrieve (0-based)
+     * @return The task at the given index
+     */
     public Task getTask(int index) {
         return tasks.get(index);
     }

@@ -2,10 +2,12 @@ package alterego.contact;
 
 import java.util.Objects;
 
+import alterego.data.Storable;
+
 /**
  * Represents a contact with a name and relationship type.
  */
-public class Contact {
+public class Contact implements Storable {
     private final String personName;
     private String relationship;
 
@@ -33,6 +35,11 @@ public class Contact {
      */
     public String getRelationship() {
         return relationship;
+    }
+
+    @Override
+    public String toFileFormat() {
+        return personName + "|" + relationship;
     }
 
     /**

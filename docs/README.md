@@ -16,6 +16,7 @@ AlterEgo is a **desktop chatbot app** for managing tasks and contacts, optimized
 - **Event**: `{description} /from {date, dd-MM-yyyy format} /to {date, dd-MM-yyyy format}`
     - Example: `event camp /from 01-04-2024 /to 05-04-2024`
     - ⚠️ Note: Overlapping events will trigger a warning
+    - From date cannot be after to date
 
 #### b. Delete task:
 - `delete t{index}`
@@ -74,3 +75,8 @@ Got it. I've added this task:
  [T][ ] read book
 Now you have 1 tasks in the list.
 ```
+
+## Limitations
+
+- The current task storage format does not hold a pointer to the actual contacts. Therefore, it assumes that the contact
+in task storage is a valid contact.

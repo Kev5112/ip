@@ -1,8 +1,8 @@
 package alterego.command;
 
 import alterego.contact.Contact;
-import alterego.contact.ContactList;
-import alterego.task.TaskList;
+import alterego.list.ContactList;
+import alterego.list.TaskList;
 import alterego.ui.Ui;
 import alterego.utils.AlterEgoException;
 
@@ -151,9 +151,7 @@ public class Parser {
         return parts[0];
     }
 
-    /**
-     * Executes command
-     */
+    // executes command
     private String executeCommand(String input, Command command) throws AlterEgoException {
         switch (command) {
         case BYE:

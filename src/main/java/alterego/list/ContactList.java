@@ -1,4 +1,4 @@
-package alterego.contact;
+package alterego.list;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -7,17 +7,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import alterego.contact.Contact;
 import alterego.storage.ContactStorage;
-import alterego.task.Task;
-import alterego.task.TaskList;
 import alterego.utils.AlterEgoException;
 import alterego.utils.ExceptionCatcher;
-import alterego.utils.Loader;
 
 /**
  * Manages contact operations
  */
-public class ContactList implements Loader {
+public class ContactList implements DataList<Contact> {
     private String loadStatus = null;
     private Set<Contact> contactSet;
     private ArrayList<Contact> contacts;
@@ -33,18 +31,25 @@ public class ContactList implements Loader {
     public ContactList(ContactStorage contactStorage, TaskList taskList) {
         this.contactStorage = contactStorage;
         this.contacts = new ArrayList<>();
+        this.contactSet = new HashSet<>();
         try {
-            contactStorage.loadContacts(this);
+            contactStorage.load(this);
             this.tasks = taskList;
         } catch (FileNotFoundException e) {
             this.tasks = taskList;
             loadStatus = "Warning: Contact data not found. Creating a new list.";
         }
-        this.contactSet = new HashSet<>(contacts);
     }
 
-    public void loadContact(Contact contact) {
+    /**
+     * Adds a contact to the internal list and set.
+     * Only used for storage loading.
+     * @param contact The contact to be added
+     */
+    @Override
+    public void addItem(Contact contact) {
         this.contacts.add(contact);
+        this.contactSet.add(contact);
     }
 
     /**
@@ -56,6 +61,10 @@ public class ContactList implements Loader {
         return loadStatus;
     }
 
+    /**
+     * Appends load status of data loading from storage
+     * @param loadStatus The status message to append
+     */
     @Override
     public void addLoadStatus(String loadStatus) {
         this.loadStatus = (this.loadStatus == null) ? loadStatus : this.loadStatus + loadStatus;
@@ -90,7 +99,7 @@ public class ContactList implements Loader {
         handleDuplicate(contact);
         contacts.add(contact);
         String successMessage = "Got it. I've added this contact:\n " + contact
-                + "\nNow you have " + contacts.size() + " contacts in the list.\n";
+                + "\nNow you have " + contactSet.size() + " contacts in the list.\n";
         return ExceptionCatcher.catchIoException(() -> contactStorage.rewriteFile(contacts), successMessage);
     }
 
@@ -102,14 +111,14 @@ public class ContactList implements Loader {
      * @throws AlterEgoException if contact number is invalid
      */
     public String delete(int contactNumber) throws AlterEgoException {
-        if (contactNumber > contacts.size()) {
-            throw new AlterEgoException("There's only " + contacts.size() + " contacts here!");
+        if (contactNumber > contactSet.size()) {
+            throw new AlterEgoException("There's only " + contactSet.size() + " contacts here!");
         }
         Contact removedContact = contacts.remove(contactNumber - 1);
         contactSet.remove(removedContact);
         tasks.unassignTask(removedContact);
         String successMessage = "Noted. I've removed this contact:\n " + removedContact + "\n"
-                + "Now you have " + contacts.size() + " contacts in the list.";
+                + "Now you have " + contactSet.size() + " contacts in the list.";
         return ExceptionCatcher.catchIoException(() -> contactStorage.rewriteFile(contacts), successMessage);
     }
 
@@ -131,6 +140,7 @@ public class ContactList implements Loader {
      * Finds a contact by exact name
      * @param input Name or partial name to search for
      * @return First matching contact, or null if not found
+     * @throws AlterEgoException if the contact is not found
      */
     public Contact findContact(String input) throws AlterEgoException {
         if (input == null || input.trim().isEmpty()) {

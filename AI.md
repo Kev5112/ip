@@ -46,7 +46,14 @@
 - Help with this AI.md
 - Final bug findings
 - Finalize javadoc headers
-- Help with readme
+
+## Week 7:
+### What I Used AI For:
+- Assistance in applying Java generics
 
 ## Overall Summary
 - Total time saved estimate: 10 hours
+
+### Note:
+- Other than testcases marked as AI-Generated, every output from AI is manually reviewed and adjusted according to
+the project needs.

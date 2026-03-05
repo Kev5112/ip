@@ -1,10 +1,11 @@
 package alterego;
 
 import alterego.command.Parser;
-import alterego.contact.ContactList;
+import alterego.list.ContactList;
 import alterego.storage.ContactStorage;
+import alterego.storage.Storage;
 import alterego.storage.TaskStorage;
-import alterego.task.TaskList;
+import alterego.list.TaskList;
 import alterego.utils.AlterEgoException;
 
 /**
