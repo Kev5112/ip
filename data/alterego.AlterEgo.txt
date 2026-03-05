@@ -2,4 +2,5 @@ T | 0 | hello
 T | 0 | make book
 T | 0 | cook
 D | 0 | xook | Apr 20 2026
+lol
 E | 0 | do something | Apr 20 2026 -> Apr 21 2026

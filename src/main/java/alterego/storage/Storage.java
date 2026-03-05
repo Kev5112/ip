@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import alterego.data.Storable;
+import alterego.list.ContactList;
 import alterego.list.DataList;
+import alterego.list.TaskList;
 import alterego.utils.AlterEgoException;
 
 /**
@@ -109,7 +111,12 @@ public abstract class Storage<T extends Storable> {
             try {
                 storable = parseFromFile(line);
             } catch (AlterEgoException e) {
-                dataList.addLoadStatus("Task storage problem: Problem with line "
+                String dataType = dataList instanceof ContactList
+                        ? "Contact"
+                        : dataList instanceof TaskList
+                        ? "Task"
+                        : "";
+                dataList.addLoadStatus(dataType + " storage problem: Problem with line "
                         + lineCount + ". " + e.getMessage() + "\n");
             }
             if (storable != null) {

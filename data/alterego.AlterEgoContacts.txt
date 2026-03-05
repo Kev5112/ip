@@ -1,2 +1,3 @@
 hero|friend
+lol
 bro|bro
